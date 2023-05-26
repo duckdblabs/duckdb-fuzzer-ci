@@ -33,7 +33,6 @@ jobs:
 
   sqlsmith-fuzzing:
     name: SQLSmith Fuzzing
-    if: github.repository == 'duckdb/duckdb'
     runs-on: ubuntu-latest
     env:
       BUILD_SQLSMITH: 1
