@@ -43,6 +43,76 @@ jobs:
         run: |
             python3 scripts/run_fuzzer.py  --sqlsmith --alltypes --shell=build/debug/duckdb
 
+  duckfuzz-all-types:
+    name: DuckFuzz All Types
+    runs-on: ubuntu-latest
+    env:
+      BUILD_SQLSMITH: 1
+      BUILD_ICU: 1
+      BUILD_JSON: 1
+      BUILD_TPCH: 1
+      BUILD_TPCDS: 1
+      BUILD_PARQUET: 1
+      BUILD_JEMALLOC: 1
+      CRASH_ON_ASSERT: 1
+      GEN: ninja
+      FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
+
+    steps:
+      - name: Dependencies
+        shell: bash
+        run: sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build ccache
+
+      - uses: actions/checkout@v3
+        with:
+          repository: duckdb/duckdb
+          fetch-depth: 0
+
+      - name: Build
+        shell: bash
+        run: |
+            make debug
+
+      - name: Fuzz
+        shell: bash
+        run: |
+            python3 scripts/run_fuzzer.py  --duckfuzz --alltypes --shell=build/debug/duckdb
+
+  duckfuzz-tpch:
+    name: DuckFuzz TPC-H
+    runs-on: ubuntu-latest
+    env:
+      BUILD_SQLSMITH: 1
+      BUILD_ICU: 1
+      BUILD_JSON: 1
+      BUILD_TPCH: 1
+      BUILD_TPCDS: 1
+      BUILD_PARQUET: 1
+      BUILD_JEMALLOC: 1
+      CRASH_ON_ASSERT: 1
+      GEN: ninja
+      FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
+
+    steps:
+      - name: Dependencies
+        shell: bash
+        run: sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build ccache
+
+      - uses: actions/checkout@v3
+        with:
+          repository: duckdb/duckdb
+          fetch-depth: 0
+
+      - name: Build
+        shell: bash
+        run: |
+            make debug
+
+      - name: Fuzz
+        shell: bash
+        run: |
+            python3 scripts/run_fuzzer.py  --duckfuzz --tpch --shell=build/debug/duckdb
+
   sqlancer-fuzzing:
     name: SQLancer Fuzzing
     runs-on: ubuntu-latest
