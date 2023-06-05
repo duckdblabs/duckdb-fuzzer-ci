@@ -79,6 +79,11 @@ jobs:
         with:
           path: fuzzer
 
+      - name: Fuzz Test
+        shell: bash
+        run: |
+            python3 fuzzer/run_fuzzer.py  --duckfuzz --${{ matrix.data }} --shell=build/debug/duckdb
+
       - name: Build
         shell: bash
         run: |
