@@ -47,55 +47,12 @@ jobs:
         run: |
             python3 fuzzer/run_fuzzer.py  --sqlsmith --alltypes --shell=build/debug/duckdb
 
-  duckfuzz-all-types:
-    name: DuckFuzz All Types
+  duckfuzz:
+    name: DuckFuzz
     runs-on: ubuntu-latest
-    env:
-      BUILD_SQLSMITH: 1
-      BUILD_ICU: 1
-      BUILD_JSON: 1
-      BUILD_TPCH: 1
-      BUILD_TPCDS: 1
-      BUILD_PARQUET: 1
-      BUILD_JEMALLOC: 1
-      CRASH_ON_ASSERT: 1
-      GEN: ninja
-      FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
-
-    steps:
-      - name: Dependencies
-        shell: bash
-        run: sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build ccache
-
-      - uses: actions/checkout@v3
-        with:
-          repository: duckdb/duckdb
-          fetch-depth: 0
-
-      - uses: actions/checkout@v3
-        with:
-          path: fuzzer
-
-      - name: Fuzzer Test
-        shell: bash
-        run: |
-            ls fuzzer
-            python3 fuzzer/run_fuzzer.py
-
-      - name: Build
-        shell: bash
-        run: |
-            python3 fuzzer/run_fuzzer.py
-            make debug
-
-      - name: Fuzz
-        shell: bash
-        run: |
-            python3 fuzzer/run_fuzzer.py  --duckfuzz --alltypes --shell=build/debug/duckdb
-
-  duckfuzz-tpch:
-    name: DuckFuzz TPC-H
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        data: [alltypes, tpch]
     env:
       BUILD_SQLSMITH: 1
       BUILD_ICU: 1
@@ -130,4 +87,4 @@ jobs:
       - name: Fuzz
         shell: bash
         run: |
-            python3 fuzzer/run_fuzzer.py  --duckfuzz --tpch --shell=build/debug/duckdb
+            python3 fuzzer/run_fuzzer.py  --duckfuzz --${{ matrix.data }} --shell=build/debug/duckdb
