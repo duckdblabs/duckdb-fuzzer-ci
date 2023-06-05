@@ -2,7 +2,7 @@ name: CIFuzz
 on:
   schedule:
     - cron: "*/107 * * * *"
-
+  workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.head_ref || '' }}-${{ github.base_ref || '' }}-${{ github.ref != 'refs/heads/master' || github.sha }}
   cancel-in-progress: true
@@ -33,6 +33,10 @@ jobs:
           repository: duckdb/duckdb
           fetch-depth: 0
 
+      - uses: actions/checkout@v3
+        with:
+          path: fuzzer
+
       - name: Build
         shell: bash
         run: |
@@ -41,7 +45,7 @@ jobs:
       - name: Fuzz
         shell: bash
         run: |
-            python3 scripts/run_fuzzer.py  --sqlsmith --alltypes --shell=build/debug/duckdb
+            python3 fuzzer/run_fuzzer.py  --sqlsmith --alltypes --shell=build/debug/duckdb
 
   duckfuzz-all-types:
     name: DuckFuzz All Types
@@ -68,6 +72,10 @@ jobs:
           repository: duckdb/duckdb
           fetch-depth: 0
 
+      - uses: actions/checkout@v3
+        with:
+          path: fuzzer
+
       - name: Build
         shell: bash
         run: |
@@ -76,7 +84,7 @@ jobs:
       - name: Fuzz
         shell: bash
         run: |
-            python3 scripts/run_fuzzer.py  --duckfuzz --alltypes --shell=build/debug/duckdb
+            python3 fuzzer/run_fuzzer.py  --duckfuzz --alltypes --shell=build/debug/duckdb
 
   duckfuzz-tpch:
     name: DuckFuzz TPC-H
@@ -103,6 +111,10 @@ jobs:
           repository: duckdb/duckdb
           fetch-depth: 0
 
+      - uses: actions/checkout@v3
+        with:
+          path: fuzzer
+
       - name: Build
         shell: bash
         run: |
@@ -111,4 +123,4 @@ jobs:
       - name: Fuzz
         shell: bash
         run: |
-            python3 scripts/run_fuzzer.py  --duckfuzz --tpch --shell=build/debug/duckdb
+            python3 fuzzer/run_fuzzer.py  --duckfuzz --tpch --shell=build/debug/duckdb
