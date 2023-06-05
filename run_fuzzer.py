@@ -83,7 +83,7 @@ def run_shell_command(cmd):
 # first get a list of all github issues, and check if we can still reproduce them
 current_errors = fuzzer_helper.extract_github_issues(shell)
 
-max_queries = 1000
+max_queries = 5000
 last_query_log_file = 'sqlsmith.log'
 complete_log_file = 'sqlsmith.complete.log'
 

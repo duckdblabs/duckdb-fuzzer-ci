@@ -76,9 +76,16 @@ jobs:
         with:
           path: fuzzer
 
+      - name: Fuzzer Test
+        shell: bash
+        run: |
+            ls fuzzer
+            python3 fuzzer/run_fuzzer.py
+
       - name: Build
         shell: bash
         run: |
+            python3 fuzzer/run_fuzzer.py
             make debug
 
       - name: Fuzz
