@@ -13,8 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        fuzzer: [duckfuzz, sqlsmith]
-        data: [alltypes, tpch]
+        fuzzer: [duckfuzz, sqlsmith, duckfuzz_functions]
+        data: [alltypes, tpch, emptyalltypes]
     env:
       BUILD_SQLSMITH: 1
       BUILD_ICU: 1
@@ -31,6 +31,9 @@ jobs:
       - name: Dependencies
         shell: bash
         run: sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build ccache
+
+      - name: Setup Ccache
+        uses: hendrikmuhs/ccache-action@main
 
       - uses: actions/checkout@v3
         with:
