@@ -17,10 +17,14 @@ for param in sys.argv:
         fuzzer = 'sqlsmith'
     elif param == '--duckfuzz':
         fuzzer = 'duckfuzz'
+    elif param == '--duckfuzz_functions':
+        fuzzer = 'duckfuzz_functions'
     elif param == '--alltypes':
         db = 'alltypes'
     elif param == '--tpch':
         db = 'tpch'
+    elif param == '--emptyalltypes':
+        db = 'emptyalltypes'
     elif param.startswith('--shell='):
         shell = param.replace('--shell=', '')
     elif param.startswith('--seed='):
@@ -31,7 +35,7 @@ if fuzzer is None:
     exit(1)
 
 if db is None:
-    print("Unrecognized database to run on, expected either --tpch or --alltypes")
+    print("Unrecognized database to run on, expected either --tpch, --alltypes or --emptyalltypes")
     exit(1)
 
 if shell is None:
