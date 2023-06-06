@@ -1,7 +1,7 @@
 name: CIFuzz
 on:
   schedule:
-    - cron: "*/137 * * * *"
+    - cron: "*/107 * * * *"
   workflow_dispatch:
 jobs:
   fuzzer:
