@@ -7,7 +7,7 @@ jobs:
   fuzzer:
     name: Fuzzer
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 120
     strategy:
       matrix:
         fuzzer: [duckfuzz, sqlsmith, duckfuzz_functions]
