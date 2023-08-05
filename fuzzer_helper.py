@@ -120,6 +120,7 @@ def test_reproducibility(shell, issue, current_errors, perform_check):
     sql = extract[0] + ';'
     error = extract[1]
     if perform_check is True:
+        print(f"Checking issue {issue['number']}...")
         (stdout, stderr, returncode) = run_shell_command_batch(shell, sql)
         if returncode == 0:
             return False
