@@ -47,6 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     strategy:
+      fail-fast: false
       matrix:
         fuzzer: [duckfuzz, sqlsmith, duckfuzz_functions]
         data: [alltypes, tpch, emptyalltypes]
@@ -66,4 +67,27 @@ jobs:
       - name: Fuzz
         shell: bash
         run: |
-            python3 fuzzer/run_fuzzer.py  --${{ matrix.fuzzer }} --${{ matrix.data }} --shell=duckdb
+            python3 fuzzer/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --shell=duckdb
+
+  check-issues:
+    name: Check existing issues
+    needs:
+    - build-duckdb
+    runs-on: ubuntu-latest
+    env:
+      FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: fuzzer
+
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: duckdb
+
+      - name: Fuzz
+        shell: bash
+        run: |
+            python3 fuzzer/run_fuzzer.py --shell=duckdb
