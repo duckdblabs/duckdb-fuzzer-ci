@@ -107,7 +107,11 @@ def extract_issue(body, nr):
 def run_shell_command_batch(shell, cmd):
     command = [shell, '--batch', '-init', '/dev/null']
 
-    res = subprocess.run(command, input=bytearray(cmd, 'utf8'), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    try:
+        res = subprocess.run(command, input=bytearray(cmd, 'utf8'), stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=60)
+    except subprocess.TimeoutExpired:
+        print(f"TIMEOUT... {cmd}")
+        return ("","",0)
     stdout = res.stdout.decode('utf8').strip()
     stderr = res.stderr.decode('utf8').strip()
     return (stdout, stderr, res.returncode)
@@ -138,7 +142,7 @@ def extract_github_issues(shell, perform_check):
         if not test_reproducibility(shell, issue, current_errors, perform_check):
             # the issue appears to be fixed - close the issue
             print(f"Failed to reproduce issue {issue['number']}, closing...")
-            close_github_issue(int(issue['number']))
+            # close_github_issue(int(issue['number']))
     return current_errors
 
 def file_issue(cmd, error_msg, fuzzer, seed, hash):
