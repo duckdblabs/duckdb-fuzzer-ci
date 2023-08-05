@@ -71,9 +71,9 @@ def make_github_issue(title, body):
         print('Response:', r.content.decode('utf8'))
         raise Exception("Failed to create issue")
 
-def get_github_issues():
+def get_github_issues(page):
     session = create_session()
-    url = issue_url()
+    url = issue_url()+'?per_page=100&page='+str(page)
     r = session.get(url)
     if r.status_code != 200:
         print('Failed to get list of issues')
@@ -136,13 +136,14 @@ def test_reproducibility(shell, issue, current_errors, perform_check):
 
 def extract_github_issues(shell, perform_check):
     current_errors = dict()
-    issues = get_github_issues()
-    for issue in issues:
-        # check if the github issue is still reproducible
-        if not test_reproducibility(shell, issue, current_errors, perform_check):
-            # the issue appears to be fixed - close the issue
-            print(f"Failed to reproduce issue {issue['number']}, closing...")
-            # close_github_issue(int(issue['number']))
+    for p in range(1,10):
+        issues = get_github_issues(p)
+        for issue in issues:
+            # check if the github issue is still reproducible
+            if not test_reproducibility(shell, issue, current_errors, perform_check):
+                # the issue appears to be fixed - close the issue
+                print(f"Failed to reproduce issue {issue['number']}, closing...")
+                # close_github_issue(int(issue['number']))
     return current_errors
 
 def file_issue(cmd, error_msg, fuzzer, seed, hash):
