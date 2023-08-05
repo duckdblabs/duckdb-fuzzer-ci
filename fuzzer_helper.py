@@ -112,28 +112,29 @@ def run_shell_command_batch(shell, cmd):
     stderr = res.stderr.decode('utf8').strip()
     return (stdout, stderr, res.returncode)
 
-def test_reproducibility(shell, issue, current_errors):
+def test_reproducibility(shell, issue, current_errors, perform_check):
     extract = extract_issue(issue['body'], issue['number'])
     if extract is None:
         # failed extract: leave the issue as-is
         return True
     sql = extract[0] + ';'
     error = extract[1]
-    (stdout, stderr, returncode) = run_shell_command_batch(shell, sql)
-    if returncode == 0:
-        return False
-    if not fuzzer_helper.is_internal_error(stderr):
-        return False
+    if perform_check is True:
+        (stdout, stderr, returncode) = run_shell_command_batch(shell, sql)
+        if returncode == 0:
+            return False
+        if not fuzzer_helper.is_internal_error(stderr):
+            return False
     # issue is still reproducible
     current_errors[error] = issue
     return True
 
-def extract_github_issues(shell):
+def extract_github_issues(shell, perform_check):
     current_errors = dict()
     issues = get_github_issues()
     for issue in issues:
         # check if the github issue is still reproducible
-        if not test_reproducibility(shell, issue, current_errors):
+        if not test_reproducibility(shell, issue, current_errors, perform_check):
             # the issue appears to be fixed - close the issue
             print(f"Failed to reproduce issue {issue['number']}, closing...")
             close_github_issue(int(issue['number']))

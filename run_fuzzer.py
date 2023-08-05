@@ -12,6 +12,7 @@ seed = -1
 fuzzer = None
 db = None
 shell = None
+perform_checks = True
 for param in sys.argv:
     if param == '--sqlsmith':
         fuzzer = 'sqlsmith'
@@ -25,6 +26,8 @@ for param in sys.argv:
         db = 'tpch'
     elif param == '--emptyalltypes':
         db = 'emptyalltypes'
+    elif param == '--no_checks':
+        perform_checks = False
     elif param.startswith('--shell='):
         shell = param.replace('--shell=', '')
     elif param.startswith('--seed='):
@@ -87,7 +90,7 @@ def run_shell_command(cmd):
 
 
 # first get a list of all github issues, and check if we can still reproduce them
-current_errors = fuzzer_helper.extract_github_issues(shell)
+current_errors = fuzzer_helper.extract_github_issues(shell, perform_checks)
 
 max_queries = 2000
 last_query_log_file = 'sqlsmith.log'
