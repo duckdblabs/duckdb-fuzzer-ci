@@ -67,7 +67,8 @@ jobs:
       - name: Fuzz
         shell: bash
         run: |
-            python3 fuzzer/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --shell=duckdb
+            chmod +x duckdb
+            python3 fuzzer/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --shell=./duckdb
 
   check-issues:
     name: Check existing issues
@@ -90,4 +91,5 @@ jobs:
       - name: Fuzz
         shell: bash
         run: |
-            python3 fuzzer/run_fuzzer.py --shell=duckdb
+            chmod +x duckdb
+            python3 fuzzer/run_fuzzer.py --duckfuzz --alltypes --shell=./duckdb
