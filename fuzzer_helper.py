@@ -111,10 +111,10 @@ def run_shell_command_batch(shell, cmd):
         res = subprocess.run(command, input=bytearray(cmd, 'utf8'), stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=60)
     except subprocess.TimeoutExpired:
         print(f"TIMEOUT... {cmd}")
-        return ("","",0)
+        return ("", "", 0, True)
     stdout = res.stdout.decode('utf8').strip()
     stderr = res.stderr.decode('utf8').strip()
-    return (stdout, stderr, res.returncode)
+    return (stdout, stderr, res.returncode, False)
 
 def test_reproducibility(shell, issue, current_errors, perform_check):
     extract = extract_issue(issue['body'], issue['number'])
@@ -125,7 +125,10 @@ def test_reproducibility(shell, issue, current_errors, perform_check):
     error = extract[1]
     if perform_check is True:
         print(f"Checking issue {issue['number']}...")
-        (stdout, stderr, returncode) = run_shell_command_batch(shell, sql)
+        (stdout, stderr, returncode, is_timeout) = run_shell_command_batch(shell, sql)
+        # TODO: Unsure what's the policy on timeouts, for now we keep them around
+        if is_timeout:
+            return True
         if returncode == 0:
             return False
         if not fuzzer_helper.is_internal_error(stderr):
