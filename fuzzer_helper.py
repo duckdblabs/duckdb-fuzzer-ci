@@ -146,7 +146,7 @@ def extract_github_issues(shell, perform_check):
             if not test_reproducibility(shell, issue, current_errors, perform_check):
                 # the issue appears to be fixed - close the issue
                 print(f"Failed to reproduce issue {issue['number']}, closing...")
-                # close_github_issue(int(issue['number']))
+                close_github_issue(int(issue['number']))
     return current_errors
 
 def file_issue(cmd, error_msg, fuzzer, seed, hash):
