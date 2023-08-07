@@ -1,6 +1,8 @@
 name: CIFuzz
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "*/107 * * * *"
 jobs:
   build-duckdb:
     name: Build DuckDB
