@@ -2,14 +2,10 @@ name: CIFuzz
 on:
   workflow_dispatch:
 jobs:
-  fuzzer:
-    name: Fuzzer
+  build-duckdb:
+    name: Build DuckDB
     runs-on: ubuntu-latest
     timeout-minutes: 120
-    strategy:
-      matrix:
-        fuzzer: [duckfuzz, sqlsmith, duckfuzz_functions]
-        data: [alltypes, tpch, emptyalltypes]
     env:
       BUILD_SQLSMITH: 1
       BUILD_ICU: 1
@@ -20,7 +16,6 @@ jobs:
       BUILD_JEMALLOC: 1
       CRASH_ON_ASSERT: 1
       GEN: ninja
-      FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
 
     steps:
       - name: Dependencies
@@ -35,16 +30,66 @@ jobs:
       - name: Setup Ccache
         uses: hendrikmuhs/ccache-action@main
 
-      - uses: actions/checkout@v3
-        with:
-          path: fuzzer
-
       - name: Build
         shell: bash
         run: |
             make debug
 
+      - uses: actions/upload-artifact@v3
+        with:
+          name: duckdb
+          path: build/debug/duckdb
+
+  fuzzer:
+    name: Fuzzer
+    needs:
+    - build-duckdb
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        fuzzer: [duckfuzz, sqlsmith, duckfuzz_functions]
+        data: [alltypes, tpch, emptyalltypes]
+    env:
+      FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: fuzzer
+
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: duckdb
+
       - name: Fuzz
         shell: bash
         run: |
-            python3 fuzzer/run_fuzzer.py  --${{ matrix.fuzzer }} --${{ matrix.data }} --shell=build/debug/duckdb
+            chmod +x duckdb
+            python3 fuzzer/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --shell=./duckdb
+
+  check-issues:
+    name: Check existing issues
+    needs:
+    - build-duckdb
+    runs-on: ubuntu-latest
+    env:
+      FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: fuzzer
+
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: duckdb
+
+      - name: Fuzz
+        shell: bash
+        run: |
+            chmod +x duckdb
+            python3 fuzzer/run_fuzzer.py --duckfuzz --alltypes --shell=./duckdb
