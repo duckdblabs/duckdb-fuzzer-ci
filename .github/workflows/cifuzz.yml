@@ -70,7 +70,15 @@ jobs:
         shell: bash
         run: |
             chmod +x duckdb
-            python3 fuzzer/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --shell=./duckdb
+            runtime="10 minute"
+            endtime=$(date -ud "$runtime" +%s)
+
+            while [[ $(date -u +%s) -le $endtime ]]
+            do
+                echo "Time Now: `date +%H:%M:%S`"
+                python3 fuzzer/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --shell=./duckdb
+            done
+
 
   check-issues:
     name: Check existing issues
