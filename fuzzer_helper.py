@@ -93,6 +93,18 @@ def close_github_issue(number):
         print('Response:', r.content.decode('utf8'))
         raise Exception("Failed to close issue")
 
+def label_github_issue(number, label):
+    session = create_session()
+    url = issue_url() + '/' + str(number) + '/labels'
+    params = {'labels': [label]}
+    r = session.patch(url, json.dumps(params))
+    if r.status_code == 200:
+        print(f'Successfully labeled Issue "{number}"')
+    else:
+        print(f'Could not label Issue "{number}" (status code {r.status_code})')
+        print('Response:', r.content.decode('utf8'))
+        raise Exception("Failed to label issue")
+
 def extract_issue(body, nr):
     try:
         splits = body.split(middle)
@@ -108,7 +120,7 @@ def run_shell_command_batch(shell, cmd):
     command = [shell, '--batch', '-init', '/dev/null']
 
     try:
-        res = subprocess.run(command, input=bytearray(cmd, 'utf8'), stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=60)
+        res = subprocess.run(command, input=bytearray(cmd, 'utf8'), stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=300)
     except subprocess.TimeoutExpired:
         print(f"TIMEOUT... {cmd}")
         return ("", "", 0, True)
@@ -118,21 +130,26 @@ def run_shell_command_batch(shell, cmd):
 
 def test_reproducibility(shell, issue, current_errors, perform_check):
     extract = extract_issue(issue['body'], issue['number'])
+    labels = issue['labels']
+    label_timeout = False
+    for label in labels:
+        if label['name'] == 'timeout':
+            label_timeout = True
     if extract is None:
         # failed extract: leave the issue as-is
         return True
     sql = extract[0] + ';'
     error = extract[1]
-    if perform_check is True:
+    if perform_check is True and label_timeout is False:
         print(f"Checking issue {issue['number']}...")
         (stdout, stderr, returncode, is_timeout) = run_shell_command_batch(shell, sql)
-        # TODO: Unsure what's the policy on timeouts, for now we keep them around
         if is_timeout:
-            return True
-        if returncode == 0:
-            return False
-        if not fuzzer_helper.is_internal_error(stderr):
-            return False
+            label_github_issue(issue['number'], 'timeout')
+        else:
+            if returncode == 0:
+                return False
+            if not fuzzer_helper.is_internal_error(stderr):
+                return False
     # issue is still reproducible
     current_errors[error] = issue
     return True
