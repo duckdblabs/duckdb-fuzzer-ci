@@ -3,11 +3,14 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "*/107 * * * *"
+
 jobs:
   build-duckdb:
     name: Build DuckDB
     runs-on: ubuntu-latest
     timeout-minutes: 120
+    outputs:
+      duckdb-hash: ${{ steps.find-hash.outputs.hash }}
     env:
       BUILD_SQLSMITH: 1
       BUILD_ICU: 1
@@ -32,6 +35,9 @@ jobs:
       - name: Setup Ccache
         uses: hendrikmuhs/ccache-action@main
 
+      - id: find-hash
+        run: echo "::set-output name=hash::$(git rev-parse HEAD)"
+
       - name: Build
         shell: bash
         run: |
@@ -55,6 +61,7 @@ jobs:
         data: [alltypes, tpch, emptyalltypes]
     env:
       FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
+      DUCKDB_HASH: ${{ needs.build-duckdb.outputs.duckdb-hash }}
 
     steps:
       - uses: actions/checkout@v3
@@ -79,6 +86,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
+      DUCKDB_HASH: ${{ needs.build-duckdb.outputs.duckdb-hash }}
 
     steps:
       - uses: actions/checkout@v3

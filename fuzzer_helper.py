@@ -41,10 +41,6 @@ middle = '''
 footer = '''
 ```'''
 
-def get_github_hash():
-    proc = subprocess.Popen(['git', 'rev-parse', 'HEAD'], stdout=subprocess.PIPE)
-    return proc.stdout.read().decode('utf8').strip()
-
 # github stuff
 def issue_url():
     return 'https://api.github.com/repos/%s/%s/issues' % (REPO_OWNER, REPO_NAME)

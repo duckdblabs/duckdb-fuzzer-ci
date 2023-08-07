@@ -48,7 +48,7 @@ if shell is None:
 if seed < 0:
     seed = random.randint(0, 2**30)
 
-git_hash = fuzzer_helper.get_github_hash()
+git_hash = os.getenv('DUCKDB_HASH')
 
 def create_db_script(db):
     if db == 'alltypes':
