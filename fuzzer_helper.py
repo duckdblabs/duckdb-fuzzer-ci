@@ -89,10 +89,10 @@ def close_github_issue(number):
         print('Response:', r.content.decode('utf8'))
         raise Exception("Failed to close issue")
 
-def label_github_issue(number, label):
+def label_github_issue(number):
     session = create_session()
     url = issue_url() + '/' + str(number) + '/labels'
-    params = {'labels': [label]}
+    params = {'labels': 'timeout'}
     r = session.patch(url, json.dumps(params))
     if r.status_code == 200:
         print(f'Successfully labeled Issue "{number}"')
@@ -140,7 +140,7 @@ def test_reproducibility(shell, issue, current_errors, perform_check):
         print(f"Checking issue {issue['number']}...")
         (stdout, stderr, returncode, is_timeout) = run_shell_command_batch(shell, sql)
         if is_timeout:
-            label_github_issue(issue['number'], 'timeout')
+            label_github_issue(issue['number'])
         else:
             if returncode == 0:
                 return False
