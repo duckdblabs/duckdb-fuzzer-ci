@@ -92,6 +92,13 @@ def run_shell_command(cmd):
 # first get a list of all github issues, and check if we can still reproduce them
 current_errors = fuzzer_helper.extract_github_issues(shell, perform_checks)
 
+common_error = 'ABORT THROWN BY INTERNAL EXCEPTION: Failed to bind column reference'
+common_error_count = 0
+
+for error_message in current_errors:
+    if error_message.startswith(common_error):
+        common_error_count = common_error_count + 1
+
 max_queries = 2000
 last_query_log_file = 'sqlsmith.log'
 complete_log_file = 'sqlsmith.complete.log'
@@ -162,6 +169,11 @@ if error_msg in current_errors:
     print("Skip filing duplicate issue")
     print("Issue already exists: https://github.com/duckdb/duckdb-fuzzer/issues/" + str(current_errors[error_msg]['number']))
     exit(0)
+
+if error_msg.startswith(common_error):
+    if common_error_count >= 50:
+        print("Skip filing issue starting with ... " + common_error)
+        exit(0)
 
 print(last_query)
 
