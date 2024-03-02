@@ -12,7 +12,7 @@ fuzzer = None
 db = None
 shell = None
 perform_checks = True
-local_run = False
+run_dry = False
 for param in sys.argv:
     if param == '--sqlsmith':
         fuzzer = 'sqlsmith'
@@ -32,10 +32,10 @@ for param in sys.argv:
         shell = param.replace('--shell=', '')
     elif param.startswith('--seed='):
         seed = int(param.replace('--seed=', ''))
-    elif param == '--local':
-        local_run = True
+    elif param == '--dry':
+        run_dry = True
 
-if not local_run:
+if not run_dry:
     import fuzzer_helper
 
 if fuzzer is None:
@@ -107,7 +107,7 @@ def run_shell_command(cmd):
     return (stdout, stderr, res.returncode)
 
 
-if not local_run:
+if not run_dry:
     # first get a list of all github issues, and check if we can still reproduce them
     current_errors = fuzzer_helper.extract_github_issues(shell, perform_checks)
 else:
@@ -150,7 +150,7 @@ if returncode == 0:
 
 
 reproduction_method = "Attempting to reproduce ..."
-if not local_run:
+if not run_dry:
     reproduction_method = "Attempting to reproduce and file issue..."
 
 print("==============  FAILURE  ================")
@@ -202,5 +202,5 @@ last_query = reduce_sql.reduce(last_query, load_script, shell, error_msg)
 cmd = load_script + '\n' + last_query + "\n"
 
 
-if not local_run:
+if not run_dry:
     fuzzer_helper.file_issue(cmd, error_msg, fuzzer_name, seed, git_hash)
