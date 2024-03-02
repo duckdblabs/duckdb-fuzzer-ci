@@ -144,7 +144,7 @@ def test_reproducibility(shell, issue, current_errors, perform_check):
         else:
             if returncode == 0:
                 return False
-            if not is_internal_error(stderr):
+            if not fuzzer_helper.is_internal_error(stderr):
                 return False
     # issue is still reproducible
     current_errors[error] = issue
@@ -172,3 +172,15 @@ def file_issue(cmd, error_msg, fuzzer, seed, hash):
     print(title, body)
     make_github_issue(title, body)
 
+def is_internal_error(error):
+    if 'differs from original result' in error:
+        return True
+    if 'INTERNAL' in error:
+        return True
+    if 'signed integer overflow' in error:
+        return True
+    if 'Sanitizer' in error or 'sanitizer' in error:
+        return True
+    if 'runtime error' in error:
+        return True
+    return False

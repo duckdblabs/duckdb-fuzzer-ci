@@ -2,6 +2,7 @@ import re
 import subprocess
 import time
 import os
+import fuzzer_helper
 import multiprocessing
 import sqlite3
 

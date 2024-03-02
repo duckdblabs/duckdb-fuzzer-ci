@@ -4,6 +4,7 @@ import sys
 import os
 import subprocess
 import reduce_sql
+import fuzzer_helper
 import random
 
 seed = -1
@@ -12,7 +13,6 @@ fuzzer = None
 db = None
 shell = None
 perform_checks = True
-run_dry = False
 for param in sys.argv:
     if param == '--sqlsmith':
         fuzzer = 'sqlsmith'
@@ -32,11 +32,6 @@ for param in sys.argv:
         shell = param.replace('--shell=', '')
     elif param.startswith('--seed='):
         seed = int(param.replace('--seed=', ''))
-    elif param == '--dry':
-        run_dry = True
-
-if not run_dry:
-    import fuzzer_helper
 
 if fuzzer is None:
     print("Unrecognized fuzzer to run, expected e.g. --sqlsmith or --duckfuzz")
@@ -54,19 +49,6 @@ if seed < 0:
     seed = random.randint(0, 2**30)
 
 git_hash = os.getenv('DUCKDB_HASH')
-
-def is_internal_error(error):
-    if 'differs from original result' in error:
-        return True
-    if 'INTERNAL' in error:
-        return True
-    if 'signed integer overflow' in error:
-        return True
-    if 'Sanitizer' in error or 'sanitizer' in error:
-        return True
-    if 'runtime error' in error:
-        return True
-    return False
 
 def create_db_script(db):
     if db == 'alltypes':
@@ -107,11 +89,8 @@ def run_shell_command(cmd):
     return (stdout, stderr, res.returncode)
 
 
-if not run_dry:
-    # first get a list of all github issues, and check if we can still reproduce them
-    current_errors = fuzzer_helper.extract_github_issues(shell, perform_checks)
-else:
-    current_errors = []
+# first get a list of all github issues, and check if we can still reproduce them
+current_errors = fuzzer_helper.extract_github_issues(shell, perform_checks)
 
 max_queries = 2000
 last_query_log_file = 'sqlsmith.log'
@@ -148,13 +127,8 @@ if returncode == 0:
     print("==============  SUCCESS  ================")
     exit(0)
 
-
-reproduction_method = "Attempting to reproduce ..."
-if not run_dry:
-    reproduction_method = "Attempting to reproduce and file issue..."
-
 print("==============  FAILURE  ================")
-print(reproduction_method)
+print("Attempting to reproduce and file issue...")
 
 # run the last query, and see if the issue persists
 with open(last_query_log_file, 'r') as f:
@@ -172,9 +146,7 @@ print(stdout)
 print("==============  STDERR  =================")
 print(stderr)
 print("==========================================")
-
-
-if not is_internal_error(stderr):
+if not fuzzer_helper.is_internal_error(stderr):
     print("Failed to reproduce the internal error with a single command")
     exit(0)
 
@@ -201,6 +173,4 @@ print("=========================================")
 last_query = reduce_sql.reduce(last_query, load_script, shell, error_msg)
 cmd = load_script + '\n' + last_query + "\n"
 
-
-if not run_dry:
-    fuzzer_helper.file_issue(cmd, error_msg, fuzzer_name, seed, git_hash)
+fuzzer_helper.file_issue(cmd, error_msg, fuzzer_name, seed, git_hash)
