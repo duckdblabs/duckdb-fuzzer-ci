@@ -91,7 +91,7 @@ def close_github_issue(number):
 
 def label_github_issue(number, label):
     session = create_session()
-    url = issue_url() + '/' + str(number) + '/labels'
+    url = issue_url() + '/' + str(number)
     params = {'labels': [label]}
     r = session.patch(url, json.dumps(params))
     if r.status_code == 200:
