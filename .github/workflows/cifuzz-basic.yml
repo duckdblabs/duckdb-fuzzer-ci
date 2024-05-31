@@ -1,4 +1,4 @@
-name: CIFuzz
+name: cifuzz-basic
 on:
   workflow_dispatch:
   repository_dispatch:
@@ -8,12 +8,6 @@ on:
       - '!main'
     paths-ignore:
       - '**.md'
-
-  pull_request:
-    types: [opened, reopened, ready_for_review]
-    paths-ignore:
-      - '**.md'
-
 
 jobs:
   build-duckdb:
