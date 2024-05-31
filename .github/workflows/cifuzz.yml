@@ -66,7 +66,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          path: fuzzer
+          repository: duckdb/duckdb
+          fetch-depth: 0
 
       - name: Download a single artifact
         uses: actions/download-artifact@v3
@@ -83,7 +84,7 @@ jobs:
             while [[ $(date -u +%s) -le $endtime ]]
             do
                 echo "Time Now: `date +%H:%M:%S`"
-                python3 fuzzer/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --shell=./duckdb
+                python3 duckdb/scripts/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --shell=./duckdb
             done
 
 
@@ -99,7 +100,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          path: fuzzer
+          repository: duckdb/duckdb
+          fetch-depth: 0
 
       - name: Download a single artifact
         uses: actions/download-artifact@v3
@@ -110,4 +112,4 @@ jobs:
         shell: bash
         run: |
             chmod +x duckdb
-            python3 fuzzer/run_fuzzer.py --duckfuzz --alltypes --shell=./duckdb
+            python3 duckdb/scripts/run_fuzzer.py --duckfuzz --alltypes --shell=./duckdb
