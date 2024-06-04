@@ -66,7 +66,7 @@ jobs:
     needs:
     - build-duckdb
     runs-on: ubuntu-latest
-    timeout-minutes: 1
+    timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:
@@ -92,7 +92,7 @@ jobs:
         run: |
             git checkout feature
             chmod +x duckdb
-            runtime="1 minute"
+            runtime="10 minute"
             endtime=$(date -ud "$runtime" +%s)
 
             while [[ $(date -u +%s) -le $endtime ]]
