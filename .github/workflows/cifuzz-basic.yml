@@ -1,8 +1,13 @@
-name: CIFuzz
+name: cifuzz-basic
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "*/107 * * * *"
+  repository_dispatch:
+  push:
+    branches:
+      - '**'
+      - '!main'
+    paths-ignore:
+      - '**.md'
 
 jobs:
   build-duckdb:
