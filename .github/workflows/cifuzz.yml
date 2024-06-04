@@ -26,9 +26,9 @@ jobs:
         shell: bash
         run: sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build ccache
 
-      - uses: actions/checkout@v3
+       - uses: actions/checkout@v3
         with:
-          repository: duckdb/duckdb
+          repository: Tmonster/duckdb
           fetch-depth: 0
 
       - name: Setup Ccache
@@ -40,6 +40,7 @@ jobs:
       - name: create extension file
         shell: bash
         run: |
+          git checkout remove-sqlsmith
           echo "duckdb_extension_load(sqlsmith 
             GIT_URL https://github.com/duckdb/duckdb_sqlsmith 
             GIT_TAG main 

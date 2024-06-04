@@ -34,7 +34,7 @@ jobs:
 
       - uses: actions/checkout@v3
         with:
-          repository: duckdb/duckdb
+          repository: Tmonster/duckdb
           fetch-depth: 0
 
       - name: Setup Ccache
@@ -46,6 +46,7 @@ jobs:
       - name: create extension file
         shell: bash
         run: |
+          git checkout remove-sqlsmith
           echo "duckdb_extension_load(sqlsmith 
             GIT_URL https://github.com/duckdb/duckdb_sqlsmith 
             GIT_TAG main 
@@ -90,6 +91,7 @@ jobs:
       - name: Fuzz
         shell: bash
         run: |
+            git checkout feature
             chmod +x duckdb
             runtime="10 minute"
             endtime=$(date -ud "$runtime" +%s)
@@ -97,7 +99,7 @@ jobs:
             while [[ $(date -u +%s) -le $endtime ]]
             do
                 echo "Time Now: `date +%H:%M:%S`"
-                python3 scripts/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --shell=./duckdb
+                python3 scripts/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --shell=./duckdb --dry
             done
 
 
@@ -124,5 +126,6 @@ jobs:
       - name: Fuzz
         shell: bash
         run: |
+            git checkout feature
             chmod +x duckdb
-            python3 scripts/run_fuzzer.py --duckfuzz --alltypes --shell=./duckdb
+            python3 scripts/run_fuzzer.py --duckfuzz --alltypes --shell=./duckdb --dry
