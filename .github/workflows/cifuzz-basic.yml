@@ -42,7 +42,7 @@ jobs:
       - id: find-hash
         run: echo "::set-output name=hash::$(git rev-parse HEAD)"
 
-      - name: create extension file
+      - name: create build sqlsmith extension file
         shell: bash
         run: |
           echo "duckdb_extension_load(sqlsmith 
