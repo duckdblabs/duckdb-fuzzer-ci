@@ -73,7 +73,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          repository: duckdb/duckdb_sqlsmith
+          repository: tmonster/duckdb_sqlsmith
+          ref: update_fuzzing_scripts
           fetch-depth: 0
 
       - name: Download a single artifact
@@ -107,7 +108,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          repository: duckdb/duckdb_sqlsmith
+          repository: tmonster/duckdb_sqlsmith
+          ref: update_fuzzing_scripts
           fetch-depth: 0
 
       - name: Download a single artifact
