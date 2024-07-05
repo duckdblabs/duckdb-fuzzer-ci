@@ -1,0 +1,607 @@
+create table all_types as select * exclude(small_enum, medium_enum, large_enum) from test_all_types();MERGE INTO main.all_types as target_0
+USING (select  
+      subq_0.c3 as c0, 
+      subq_0.c2 as c1
+    from 
+      (select  
+            61 as c0, 
+            ref_0.int_array as c1, 
+            ref_1.varchar_array as c2, 
+            ref_1.tinyint as c3, 
+            ref_0.fixed_nested_int_array as c4, 
+            ref_0.utinyint as c5, 
+            ref_0.utinyint as c6, 
+            ref_1.timestamptz_array as c7, 
+            ref_1.interval as c8, 
+            ref_0.uhugeint as c9, 
+            ref_0.bigint as c10
+          from 
+            main.all_types as ref_0
+              right join main.all_types as ref_1
+              on (((ref_0.varchar ^@ ref_0.varchar) 
+                    or (ref_1.varchar ~~* ref_1.varchar)) 
+                  and (ref_0.varchar !~~* ref_1.varchar))
+          where 1) as subq_0
+    where subq_0.c1 is NULL
+    limit 74) as subq_1
+ON target_0.varchar_array = subq_1.c1 
+WHEN NOT MATCHED AND __internal_decompress_integral_smallint(
+      cast(cast(null as utinyint) as utinyint),
+      cast(cast(null as utinyint) as utinyint)) is NULL
+   THEN INSERT VALUES ( 1, cast(null as tinyint), (select smallint from main.all_types limit 1 offset 5)
+    , 56, cast(null as bigint), cast(null as hugeint), cast(null as uhugeint), cast(null as utinyint), cast(null as usmallint), case when cast(null as varchar) !~~* cast(null as varchar) then (select uint from main.all_types limit 1 offset 6)
+       else (select uint from main.all_types limit 1 offset 6)
+       end
+    , txid_current(), cast(null as date), cast(null as time), case when 47 is NULL then cast(null as timestamp) else cast(null as timestamp) end
+    , cast(null as timestamp_s), cast(null as timestamp_ms), cast(null as timestamp_ns), add(
+    cast(cast(null as interval) as interval),
+    cast(cast(null as interval) as interval)), cast(null as timestamp with time zone), (select float from main.all_types limit 1 offset 12)
+    , cast(null as double), cast(null as decimal(4,1)), cast(null as decimal(9,4)), cast(null as decimal(18,6)), cast(null as decimal(38,10)), cast(null as uuid), (select interval from main.all_types limit 1 offset 3)
+    , cast(null as varchar), cast(null as blob), (select bit from main.all_types limit 1 offset 26)
+    , (select int_array from main.all_types limit 1 offset 6)
+    , (select double_array from main.all_types limit 1 offset 6)
+    , cast(null as date[]), case when EXISTS (
+      select  
+          ref_3.fixed_nested_varchar_array as c0, 
+          sample_0.bigint as c1, 
+          sample_0.smallint as c2, 
+          array_value() as c3
+        from 
+          main.all_types as sample_0 tablesample system (0.2) 
+              inner join main.all_types as ref_2
+              on (0)
+            left join main.all_types as ref_3
+              left join main.all_types as ref_4
+              on (0)
+            on (sample_0.varchar ~~* sample_0.varchar)
+        where 0) then cast(null as timestamp[]) else cast(null as timestamp[]) end
+    , cast(null as timestamp with time zone[]), cast(null as varchar[]), case when ((cast(null as varchar) !~~* cast(null as varchar)) 
+        or (cast(null as varchar) !~~ cast(null as varchar))) 
+      or (cast(null as varchar) ^@ cast(null as varchar)) then cast(null as integer[][]) else cast(null as integer[][]) end
+    , cast(null as struct(a integer, b varchar)), (select struct_of_arrays from main.all_types limit 1 offset 5)
+    , cast(null as struct(a integer, b varchar)[]), cast(null as map(varchar, varchar)), case when 0 then cast(null as union("name" varchar, age smallint)) else cast(null as union("name" varchar, age smallint)) end
+    , cast(null as integer[3]), cast(null as varchar[3]), cast(null as integer[3][3]), cast(null as varchar[3][3]), cast(null as struct(a integer, b varchar)[3]), cast(null as struct(a integer[3], b varchar[3])), cast(null as integer[][3]), cast(null as integer[3][]))
+;
+select  
+  current_schema() as c0, 
+  subq_0.c0 as c1, 
+  case when subq_0.c1 is NULL then subq_0.c0 else subq_0.c0 end
+     as c2, 
+  subq_0.c2 as c3, 
+  subq_0.c1 as c4, 
+  subq_0.c1 as c5, 
+  subq_0.c0 as c6, 
+  subq_0.c0 as c7, 
+  subq_0.c1 as c8, 
+  subq_0.c2 as c9, 
+  case when (select varchar from main.all_types limit 1 offset 2)
+         ~~* parse_filename(
+        cast((select varchar from main.all_types limit 1 offset 5)
+           as varchar),
+        cast((select varchar from main.all_types limit 1 offset 4)
+           as varchar),
+        cast((select varchar from main.all_types limit 1 offset 37)
+           as varchar)) then subq_0.c1 else subq_0.c1 end
+     as c10, 
+  subq_0.c0 as c11, 
+  get_current_timestamp() as c12, 
+  subq_0.c1 as c13, 
+  cast(coalesce(subq_0.c1,
+    subq_0.c1) as integer[]) as c14, 
+  subq_0.c2 as c15, 
+  (select time_tz from main.all_types limit 1 offset 95)
+     as c16, 
+  subq_0.c0 as c17, 
+  subq_0.c2 as c18
+from 
+  (select  
+        sample_0.timestamp_tz as c0, 
+        sample_0.int_array as c1, 
+        sample_0.utinyint as c2
+      from 
+        main.all_types as sample_0 tablesample system (2.9) 
+      where sample_0.varchar ~~* sample_0.varchar
+      limit 144) as subq_0
+where EXISTS (
+  select  
+      case when sample_1.timestamptz_array is not NULL then sample_1.timestamp_tz else sample_1.timestamp_tz end
+         as c0
+    from 
+      main.all_types as sample_1 tablesample system (9.8) ,
+      lateral (select  
+            ref_0.double as c0, 
+            ref_0.timestamptz_array as c1, 
+            (select smallint from main.all_types limit 1 offset 2)
+               as c2, 
+            sample_1.map as c3, 
+            ref_0.uhugeint as c4, 
+            ref_0.fixed_nested_int_array as c5, 
+            sample_1.union as c6, 
+            ref_0.array_of_structs as c7, 
+            subq_0.c2 as c8, 
+            subq_0.c0 as c9, 
+            subq_0.c1 as c10
+          from 
+            main.all_types as ref_0
+          where sample_1.varchar ~~ ref_0.varchar) as subq_1
+    where subq_1.c8 is not NULL
+    limit 67)
+limit 114;
+select  
+  sample_0.dec_18_6 as c0, 
+  sample_0.dec_4_1 as c1, 
+  sample_0.utinyint as c2, 
+  (select struct_of_arrays from main.all_types limit 1 offset 1)
+     as c3, 
+  sample_0.time as c4, 
+  sample_0.dec_9_4 as c5, 
+  sample_0.ubigint as c6, 
+  sample_0.smallint as c7, 
+  sample_0.timestamp as c8
+from 
+  main.all_types as sample_0 tablesample system (7.9) 
+where sample_0.varchar ^@ parse_filename(
+    cast(sample_0.varchar as varchar),
+    cast(sample_0.varchar as varchar),
+    cast(sample_0.varchar as varchar))
+limit 80;
+select  
+  case when (0) 
+      or ((cast(null as varchar) !~~ sample_0.varchar) 
+        and ((sample_0.double is not NULL) 
+          and ((0) 
+            or (EXISTS (
+              select  
+                  70 as c0, 
+                  sample_0.date_array as c1, 
+                  ref_0.fixed_varchar_array as c2, 
+                  ref_0.date as c3, 
+                  sample_0.uhugeint as c4, 
+                  sample_0.fixed_array_of_int_list as c5, 
+                  ref_0.hugeint as c6, 
+                  ref_0.bit as c7, 
+                  sample_0.varchar_array as c8, 
+                  sample_0.blob as c9, 
+                  ref_0.hugeint as c10
+                from 
+                  main.all_types as ref_0
+                where (sample_0.int is not NULL) 
+                  and ((ref_0.varchar !~~ ref_0.varchar) 
+                    or (sample_0.varchar ~~* ref_0.varchar))
+                limit 10))))) then map() else map() end
+     as c0, 
+  (select uuid from main.all_types limit 1 offset 4)
+     as c1, 
+  sample_0.nested_int_array as c2, 
+  sample_0.timestamp_array as c3, 
+  sample_0.fixed_nested_int_array as c4
+from 
+  main.all_types as sample_0 tablesample bernoulli (2.8) 
+where 1
+limit 119;
+select  
+  (select uint from main.all_types limit 1 offset 2)
+     as c0, 
+  sample_0.tinyint as c1, 
+  list_value() as c2, 
+  cast(coalesce(sample_0.timestamp_tz,
+    cast(null as timestamp with time zone)) as timestamp with time zone) as c3, 
+  (select uuid from main.all_types limit 1 offset 3)
+     as c4, 
+  sample_0.interval as c5, 
+  sample_0.dec38_10 as c6, 
+  sample_0.double_array as c7, 
+  sample_0.timestamp_s as c8, 
+  sample_0.map as c9, 
+  sample_0.timestamp_ns as c10
+from 
+  main.all_types as sample_0 tablesample system (2.5) 
+where sample_0.varchar ~~~ sample_0.varchar
+limit 156;
+select  
+  ref_1.fixed_nested_int_array as c0
+from 
+  main.all_types as ref_0
+    inner join main.all_types as ref_1
+    on ((((select varchar from main.all_types limit 1 offset 3)
+               ^@ ref_1.varchar) 
+          and (ref_0.varchar ~~* ref_0.varchar)) 
+        or (ref_1.varchar ~~~ ref_1.varchar))
+where EXISTS (
+  select distinct 
+      ref_0.array_of_structs as c0, 
+      sample_0.blob as c1
+    from 
+      main.all_types as sample_0 tablesample bernoulli (8.2) 
+    where ref_0.utinyint is NULL)
+limit 84;
+select  
+  subq_1.c1 as c0, 
+  map_keys() as c1, 
+  subq_1.c5 as c2, 
+  subq_1.c2 as c3, 
+  subq_1.c4 as c4
+from 
+  (select  
+        regexp_split_to_array(
+          cast((select varchar from main.all_types limit 1 offset 1)
+             as varchar),
+          cast(sample_0.varchar as varchar)) as c0, 
+        subq_0.c0 as c1, 
+        sample_0.ubigint as c2, 
+        subq_0.c0 as c3, 
+        subq_0.c0 as c4, 
+        cast(coalesce(sample_0.timestamp_array,
+          sample_0.timestamp_array) as timestamp[]) as c5, 
+        subq_0.c0 as c6, 
+        subq_0.c0 as c7, 
+        
+          arg_max_null(
+            cast(sample_0.double as double),
+            cast(sample_0.double as double)) over (partition by sample_0.time order by subq_0.c0) as c8, 
+        sample_0.timestamp as c9, 
+        subq_0.c0 as c10, 
+        subq_0.c0 as c11
+      from 
+        main.all_types as sample_0 tablesample system (5) ,
+        lateral (select  
+              sample_1.varchar_array as c0
+            from 
+              main.all_types as sample_1 tablesample system (2.7) 
+            where sample_1.varchar ~~* cast(null as varchar)
+            limit 114) as subq_0
+      where ((1) 
+          and ((((select varchar from main.all_types limit 1 offset 2)
+                   ~~* sample_0.varchar) 
+              and (sample_0.varchar ~~~ sample_0.varchar)) 
+            and ((select varchar from main.all_types limit 1 offset 55)
+                 ~~* sample_0.varchar))) 
+        and (sample_0.varchar ~~ sample_0.varchar)) as subq_1
+where case when writefile() ^@ (select varchar from main.all_types limit 1 offset 3)
+         then (select varchar from main.all_types limit 1 offset 1)
+       else (select varchar from main.all_types limit 1 offset 1)
+       end
+     !~~* sha3(
+    cast(cast(coalesce(enum_code(
+        cast(cast(null as any) as any)),
+      case when subq_1.c0 is NULL then case when (((((select varchar from main.all_types limit 1 offset 3)
+                       ~~* cast(null as varchar)) 
+                  or (((select varchar from main.all_types limit 1 offset 3)
+                         !~~* (select varchar from main.all_types limit 1 offset 2)
+                        ) 
+                    or ((select varchar from main.all_types limit 1 offset 24)
+                         ~~ (select varchar from main.all_types limit 1 offset 78)
+                        ))) 
+                and ((select varchar from main.all_types limit 1 offset 5)
+                     !~~* (select varchar from main.all_types limit 1 offset 3)
+                    )) 
+              or ((select varchar from main.all_types limit 1 offset 2)
+                   ~~ (select varchar from main.all_types limit 1 offset 3)
+                  )) 
+            and (cast(null as varchar) !~~ (select varchar from main.all_types limit 1 offset 1)
+                ) then case when subq_1.c8 is not NULL then cast(null as any) else cast(null as any) end
+             else case when subq_1.c8 is not NULL then cast(null as any) else cast(null as any) end
+             end
+           else case when (((((select varchar from main.all_types limit 1 offset 3)
+                       ~~* cast(null as varchar)) 
+                  or (((select varchar from main.all_types limit 1 offset 3)
+                         !~~* (select varchar from main.all_types limit 1 offset 2)
+                        ) 
+                    or ((select varchar from main.all_types limit 1 offset 24)
+                         ~~ (select varchar from main.all_types limit 1 offset 78)
+                        ))) 
+                and ((select varchar from main.all_types limit 1 offset 5)
+                     !~~* (select varchar from main.all_types limit 1 offset 3)
+                    )) 
+              or ((select varchar from main.all_types limit 1 offset 2)
+                   ~~ (select varchar from main.all_types limit 1 offset 3)
+                  )) 
+            and (cast(null as varchar) !~~ (select varchar from main.all_types limit 1 offset 1)
+                ) then case when subq_1.c8 is not NULL then cast(null as any) else cast(null as any) end
+             else case when subq_1.c8 is not NULL then cast(null as any) else cast(null as any) end
+             end
+           end
+        ) as any) as any),
+    cast(cast(coalesce(cast(null as any),
+      cast(null as any)) as any) as any));
+select  
+  subq_1.c2 as c0, 
+  sample_1.int as c1, 
+  
+    arg_min(
+      cast(sample_0.varchar as varchar),
+      cast(case when sample_0.varchar ~~~ sample_0.varchar then shell_escape_crnl(
+          cast(cast(null as any) as any)) else shell_escape_crnl(
+          cast(cast(null as any) as any)) end
+         as varchar)) over (partition by subq_1.c2,subq_0.c0,subq_1.c2,subq_1.c3,sample_0.ubigint order by sample_0.bigint,subq_0.c0) as c2
+from 
+  (select  
+            ref_0.date as c0
+          from 
+            main.all_types as ref_0
+          where 1
+          limit 121) as subq_0
+      inner join main.all_types as sample_0 tablesample system (5.2) 
+        right join main.all_types as sample_1 tablesample bernoulli (6) 
+        on (sample_1.varchar !~~ cast(null as varchar))
+      on (sample_1.varchar ~~* sample_0.varchar)
+    left join (select  
+          sample_2.int_array as c0, 
+          sample_2.hugeint as c1, 
+          sample_2.timestamp_array as c2, 
+          sample_2.timestamp_array as c3
+        from 
+          main.all_types as sample_2 tablesample system (5.4) 
+        where (select utinyint from main.all_types limit 1 offset 6)
+             is not NULL
+        limit 18) as subq_1
+    on (cast(null as varchar) ~~* sample_1.varchar)
+where cast(coalesce(sample_0.varchar,
+    sample_1.varchar) as varchar) ~~~ sample_0.varchar
+limit 74;
+select  
+  cast(coalesce(array_zip(),
+    array_zip()) as struct[]) as c0, 
+  (select map from main.all_types limit 1 offset 6)
+     as c1, 
+  subq_0.c0 as c2, 
+  
+    arg_min_null(
+      cast(ref_0.int as integer),
+      cast(ref_0.int as integer)) over (partition by ref_0.bool,subq_0.c1 order by ref_0.utinyint) as c3, 
+  decade(
+    cast(ref_0.timestamp as timestamp)) as c4, 
+  subq_0.c3 as c5, 
+  subq_0.c3 as c6, 
+  subq_0.c3 as c7, 
+  subq_0.c1 as c8, 
+  ref_0.tinyint as c9, 
+  ref_0.double_array as c10, 
+  subq_0.c2 as c11
+from 
+  main.all_types as ref_0,
+  lateral (select  
+        (select hugeint from main.all_types limit 1 offset 4)
+           as c0, 
+        sample_3.smallint as c1, 
+        sample_1.double_array as c2, 
+        (select array_of_structs from main.all_types limit 1 offset 4)
+           as c3
+      from 
+        main.all_types as ref_1
+          inner join main.all_types as ref_2
+              right join main.all_types as sample_0 tablesample bernoulli (9.3) 
+                right join main.all_types as sample_1 tablesample system (1.3) 
+                on (sample_0.uhugeint = sample_1.uhugeint )
+              on ((select bool from main.all_types limit 1 offset 3)
+                     is NULL)
+            left join main.all_types as sample_2 tablesample bernoulli (7.6) 
+              right join main.all_types as sample_3 tablesample bernoulli (7.9) 
+              on (ref_0.varchar ~~ sample_3.varchar)
+            on (ref_2.varchar !~~ ref_0.varchar)
+          on (ref_1.double_array = ref_2.double_array )
+      where ref_0.timestamp_array is NULL) as subq_0
+where ref_0.varchar ~~~ ref_0.varchar;
+select  
+  subq_0.c0 as c0, 
+  sample_0.bit as c1
+from 
+  main.all_types as sample_0 tablesample bernoulli (4.1) 
+        right join main.all_types as sample_1 tablesample system (8.2) 
+        on (sample_1.varchar ~~ sample_0.varchar)
+      right join (select  
+            sample_2.double as c0, 
+            sample_2.timestamp_array as c1
+          from 
+            main.all_types as sample_2 tablesample bernoulli (0.3) 
+          where (sample_2.varchar ~~* sample_2.varchar) 
+            and (sample_2.varchar ~~* sample_2.varchar)) as subq_0
+      on ((sample_1.varchar !~~ sample_1.varchar) 
+          and ((sample_1.varchar ~~ sample_1.varchar) 
+            or ((sample_0.varchar ~~~ sample_0.varchar) 
+              or (sample_1.varchar ^@ cast(null as varchar)))))
+    inner join main.all_types as ref_0
+      inner join (select  
+            ref_1.varchar as c0, 
+            ref_1.utinyint as c1, 
+            ref_1.dec_9_4 as c2, 
+            72 as c3, 
+            ref_1.nested_int_array as c4, 
+            ref_1.bool as c5, 
+            ref_1.array_of_structs as c6, 
+            (select date_array from main.all_types limit 1 offset 5)
+               as c7, 
+            ref_1.time as c8, 
+            ref_1.fixed_array_of_int_list as c9
+          from 
+            main.all_types as ref_1
+          where ref_1.varchar ~~~ ref_1.varchar
+          limit 121) as subq_1
+      on (subq_1.c0 !~~* ref_0.varchar)
+    on (ref_0.varchar ~~ subq_1.c0)
+where current_database() !~~* ref_0.varchar
+limit 82;
+select  
+  txid_current() as c0, 
+  subq_3.c0 as c1, 
+  subq_4.c10 as c2
+from 
+  (select  
+        ref_0.union as c0
+      from 
+        main.all_types as sample_0 tablesample system (9.9) 
+            inner join main.all_types as ref_0
+            on (sample_0.timestamp_ms is not NULL)
+          inner join main.all_types as ref_1
+          on (sample_0.hugeint = ref_1.hugeint ),
+        lateral (select  
+              ref_0.ubigint as c0, 
+              ref_1.timestamp_ms as c1, 
+              sample_0.fixed_array_of_int_list as c2
+            from 
+              main.all_types as sample_1 tablesample bernoulli (0.5) ,
+              lateral (select  
+                    (select list_of_fixed_int_array from main.all_types limit 1 offset 2)
+                       as c0, 
+                    ref_0.dec_9_4 as c1
+                  from 
+                    main.all_types as ref_2
+                  where ref_2.varchar ~~~ sample_1.varchar
+                  limit 88) as subq_0
+            where (select varchar from main.all_types limit 1 offset 3)
+                 !~~ ref_0.varchar
+            limit 97) as subq_1
+      where ref_0.varchar !~~ ref_1.varchar
+      limit 186) as subq_2,
+  lateral (select  
+        subq_2.c0 as c0
+      from 
+        main.all_types as ref_3
+      where EXISTS (
+        select  
+            ref_3.list_of_fixed_int_array as c0, 
+            ref_5.fixed_varchar_array as c1, 
+            subq_2.c0 as c2, 
+            ref_3.ubigint as c3, 
+            subq_2.c0 as c4
+          from 
+            main.all_types as ref_4
+              left join main.all_types as ref_5
+              on (subq_2.c0 is not NULL)
+          where ref_5.varchar ^@ ref_4.varchar)) as subq_3,
+  lateral (select  
+        sample_2.varchar_array as c0, 
+        subq_2.c0 as c1, 
+        ref_7.uhugeint as c2, 
+        ref_8.timestamp_s as c3, 
+        
+          arg_min(
+            cast(ref_6.bigint as bigint),
+            cast(sample_2.bigint as bigint)) over (partition by ref_6.int_array,ref_7.struct order by sample_2.tinyint) as c4, 
+        subq_3.c0 as c5, 
+        mod(
+          cast(ref_8.utinyint as utinyint),
+          cast(ref_6.utinyint as utinyint)) as c6, 
+        (select varchar_array from main.all_types limit 1 offset 25)
+           as c7, 
+        case when ref_8.map is not NULL then ref_7.struct_of_fixed_array else ref_7.struct_of_fixed_array end
+           as c8, 
+        row() as c9, 
+        subq_3.c0 as c10, 
+        case when ((subq_2.c0 is not NULL) 
+              and (1)) 
+            and (1) then ref_6.timestamp_tz else ref_6.timestamp_tz end
+           as c11
+      from 
+        main.all_types as ref_6
+          inner join main.all_types as ref_7
+            right join main.all_types as ref_8
+              inner join main.all_types as sample_2 tablesample system (3.4) 
+              on (ref_8.varchar ~~* sample_2.varchar)
+            on (ref_8.varchar !~~ (select varchar from main.all_types limit 1 offset 3)
+                  )
+          on (ref_7.varchar_array is not NULL)
+      where (ref_6.varchar !~~* ref_6.varchar) 
+        and (1)
+      limit 64) as subq_4
+where current_database() ~~~ (select varchar from main.all_types limit 1 offset 5)
+    
+limit 52;
+select  
+  (select varchar from main.all_types limit 1 offset 5)
+     as c0, 
+  
+    argmax(
+      cast(case when cast(null as varchar) ^@ sample_0.varchar then ceiling(
+          cast(cast(null as decimal) as decimal)) else ceiling(
+          cast(cast(null as decimal) as decimal)) end
+         as decimal),
+      cast(cast(null as decimal) as decimal)) over (partition by sample_0.bit,sample_0.dec38_10,sample_0.dec_4_1 order by sample_0.date_array) as c1, 
+  cast(nullif(sample_0.usmallint,
+    sample_0.usmallint) as usmallint) as c2, 
+  (select time_tz from main.all_types limit 1 offset 1)
+     as c3, 
+  sample_0.date as c4, 
+  sample_0.struct_of_fixed_array as c5
+from 
+  main.all_types as sample_0 tablesample system (6.4) 
+where (select varchar from main.all_types limit 1 offset 6)
+     !~~* cast(null as varchar)
+limit 79;
+select  
+  map_concat() as c0, 
+  (select usmallint from main.all_types limit 1 offset 1)
+     as c1, 
+  ref_1.fixed_nested_int_array as c2, 
+  subq_0.c2 as c3, 
+  ref_1.hugeint as c4, 
+  subq_0.c2 as c5
+from 
+  (select  
+          sample_0.dec38_10 as c0, 
+          ref_0.smallint as c1, 
+          sample_0.timestamp_ms as c2
+        from 
+          main.all_types as ref_0
+            inner join main.all_types as sample_0 tablesample system (0.6) 
+            on (EXISTS (
+                select  
+                    (select dec_18_6 from main.all_types limit 1 offset 6)
+                       as c0
+                  from 
+                    main.all_types as sample_1 tablesample system (6.8) 
+                  where 0
+                  limit 171))
+        where 0) as subq_0
+    right join main.all_types as ref_1
+    on (ref_1.list_of_fixed_int_array is not NULL)
+where ref_1.uint is NULL
+limit 94;
+select  
+  subq_1.c0 as c0, 
+  case when current_database() !~~* subq_1.c7 then subq_1.c0 else subq_1.c0 end
+     as c1, 
+  subq_1.c1 as c2
+from 
+  (select  
+        
+          argmax(
+            cast(sample_0.timestamp_tz as timestamp with time zone),
+            cast(sample_0.timestamp_tz as timestamp with time zone)) over (partition by sample_0.struct order by sample_0.fixed_varchar_array,subq_0.c6) as c0, 
+        16 as c1, 
+        sample_0.array_of_structs as c2, 
+        subq_0.c0 as c3, 
+        sample_0.struct_of_arrays as c4, 
+        sample_0.timestamp_s as c5, 
+        subq_0.c4 as c6, 
+        current_schema() as c7, 
+        subq_0.c2 as c8
+      from 
+        main.all_types as sample_0 tablesample bernoulli (4.7) ,
+        lateral (select distinct 
+              sample_0.union as c0, 
+              sample_2.varchar_array as c1, 
+              sample_0.fixed_nested_int_array as c2, 
+              sample_2.struct_of_arrays as c3, 
+              57 as c4, 
+              sample_0.int_array as c5, 
+              sample_0.dec_4_1 as c6, 
+              sample_2.ubigint as c7, 
+              sample_1.fixed_array_of_int_list as c8
+            from 
+              main.all_types as sample_1 tablesample system (4.2) 
+                inner join main.all_types as sample_2 tablesample bernoulli (9.2) 
+                on (sample_0.varchar ^@ sample_1.varchar)
+            where (sample_2.varchar !~~ sample_0.varchar) 
+              and (cast(null as varchar) !~~* sample_0.varchar)) as subq_0
+      where (select varchar from main.all_types limit 1 offset 1)
+           !~~* to_hex(
+          cast(sample_0.hugeint as hugeint))) as subq_1
+where (select varchar from main.all_types limit 1 offset 5)
+     ~~~ subq_1.c7
+limit 108;
+
+
+
+
+

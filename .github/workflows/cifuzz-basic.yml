@@ -88,6 +88,10 @@ jobs:
         with:
           name: duckdb
 
+      - name: stuff
+        run: |
+          echo "helllooo"
+
       - name: Fuzz
         shell: bash
         run: |
