@@ -40,6 +40,10 @@ jobs:
       - name: Setup Ccache
         uses: hendrikmuhs/ccache-action@main
 
+      - name: whats wrong
+        shell: bash
+        run: echo "run me please"
+
       - id: find-hash
         run: echo "::set-output name=hash::$(git rev-parse HEAD)"
 
