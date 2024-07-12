@@ -82,7 +82,7 @@ jobs:
 
     steps:
       - name: checkout duckdb_sqlsmith
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
         with:
           repository: Tmonster/duckdb_sqlsmith
           ref: update_fuzzing_scripts
