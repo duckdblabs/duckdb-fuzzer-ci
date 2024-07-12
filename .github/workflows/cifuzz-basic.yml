@@ -83,9 +83,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          repository: Tmonster/duckdb
-          ref: fix_duckdb_fuzzer_ci
-          fetch-depth: 0
+          repository: Tmonster/duckdb_sqlsmith
+          ref: update_fuzzing_scripts
+          sparse-checkout: |
+            scripts
 
       - name: Download a single artifact
         uses: actions/download-artifact@v3
@@ -122,9 +123,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          repository: Tmonster/duckdb
-          ref: fix_duckdb_fuzzer_ci
-          fetch-depth: 0
+          repository: Tmonster/duckdb_sqlsmith
+          ref: update_fuzzing_scripts
+          sparse-checkout: |
+            scripts
 
       - name: Download a single artifact
         uses: actions/download-artifact@v3
