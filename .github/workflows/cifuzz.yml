@@ -71,10 +71,13 @@ jobs:
       DUCKDB_HASH: ${{ needs.build-duckdb.outputs.duckdb-hash }}
 
     steps:
-      - uses: actions/checkout@v3
+      - name: checkout duckdb_sqlsmith
+        uses: actions/checkout@v3
         with:
           repository: duckdb/duckdb_sqlsmith
-          fetch-depth: 0
+          path: duckdb_sqlsmith
+          sparse-checkout: |
+            scripts
 
       - name: Download a single artifact
         uses: actions/download-artifact@v3
@@ -87,11 +90,12 @@ jobs:
             chmod +x duckdb
             runtime="10 minute"
             endtime=$(date -ud "$runtime" +%s)
+            cd duckdb_sqlsmith
 
             while [[ $(date -u +%s) -le $endtime ]]
             do
                 echo "Time Now: `date +%H:%M:%S`"
-                python3 scripts/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --shell=./duckdb
+                python3 scripts/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --shell=../duckdb
             done
 
 
@@ -108,7 +112,9 @@ jobs:
       - uses: actions/checkout@v3
         with:
           repository: duckdb/duckdb_sqlsmith
-          fetch-depth: 0
+          path: duckdb_sqlsmith
+          sparse-checkout: |
+            scripts
 
       - name: Download a single artifact
         uses: actions/download-artifact@v3
@@ -119,4 +125,4 @@ jobs:
         shell: bash
         run: |
             chmod +x duckdb
-            python3 scripts/run_fuzzer.py --duckfuzz --alltypes --shell=./duckdb
+            cd duckdb_sqlsmith & python3 scripts/run_fuzzer.py --duckfuzz --alltypes --shell=../duckdb
