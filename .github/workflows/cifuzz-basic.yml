@@ -33,16 +33,11 @@ jobs:
 
       - uses: actions/checkout@v3
         with:
-          repository: Tmonster/duckdb
-          ref: fix_duckdb_fuzzer_ci
+          repository: duckdb/duckdb
           fetch-depth: 0
 
       - name: Setup Ccache
         uses: hendrikmuhs/ccache-action@main
-
-      - name: whats wrong
-        shell: bash
-        run: echo "run me please"
 
       - id: find-hash
         run: echo "::set-output name=hash::$(git rev-parse HEAD)"
@@ -84,8 +79,7 @@ jobs:
       - name: checkout duckdb_sqlsmith
         uses: actions/checkout@v3
         with:
-          repository: Tmonster/duckdb_sqlsmith
-          ref: update_fuzzing_scripts
+          repository: duckdb/duckdb_sqlsmith
           path: duckdb_sqlsmith
           sparse-checkout: |
             scripts
@@ -95,10 +89,6 @@ jobs:
         with:
           name: duckdb
 
-      - name: stuff
-        run: |
-          echo "helllooo"
-
       - name: Fuzz
         shell: bash
         run: |
@@ -106,38 +96,38 @@ jobs:
             runtime="10 minute"
             endtime=$(date -ud "$runtime" +%s)
             cd duckdb_sqlsmith
+
             while [[ $(date -u +%s) -le $endtime ]]
             do
                 echo "Time Now: `date +%H:%M:%S`"
-                python3 scripts/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --shell=../duckdb --dry
+                python3 scripts/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --shell=../duckdb
             done
 
 
-  # check-issues:
-  #   name: Check existing issues
-  #   needs:
-  #   - build-duckdb
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
-  #     DUCKDB_HASH: ${{ needs.build-duckdb.outputs.duckdb-hash }}
+  check-issues:
+    name: Check existing issues
+    needs:
+    - build-duckdb
+    runs-on: ubuntu-latest
+    env:
+      FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
+      DUCKDB_HASH: ${{ needs.build-duckdb.outputs.duckdb-hash }}
 
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         repository: Tmonster/duckdb_sqlsmith
-  #         ref: update_fuzzing_scripts
-  #         path: duckdb_sqlsmith
-  #         sparse-checkout: |
-  #           scripts
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: duckdb/duckdb_sqlsmith
+          path: duckdb_sqlsmith
+          sparse-checkout: |
+            scripts
 
-  #     - name: Download a single artifact
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: duckdb
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: duckdb
 
-  #     - name: Fuzz
-  #       shell: bash
-  #       run: |
-  #           chmod +x duckdb
-  #           cd duckdb_sqlsmith & python3 scripts/run_fuzzer.py --duckfuzz --alltypes --shell=../duckdb --dry
+      - name: Fuzz
+        shell: bash
+        run: |
+            chmod +x duckdb
+            cd duckdb_sqlsmith & python3 scripts/run_fuzzer.py --duckfuzz --alltypes --shell=../duckdb
