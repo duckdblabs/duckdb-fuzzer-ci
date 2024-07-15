@@ -79,7 +79,8 @@ jobs:
       - name: checkout duckdb_sqlsmith
         uses: actions/checkout@v3
         with:
-          repository: duckdb/duckdb_sqlsmith
+          repository: Tmonster/duckdb_sqlsmith
+          ref: fix_fuzzer_script
           path: duckdb_sqlsmith
           sparse-checkout: |
             scripts
@@ -116,7 +117,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          repository: duckdb/duckdb_sqlsmith
+          repository: Tmonster/duckdb_sqlsmith
+          ref: fix_fuzzer_script
           path: duckdb_sqlsmith
           sparse-checkout: |
             scripts
