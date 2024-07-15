@@ -125,4 +125,5 @@ jobs:
         shell: bash
         run: |
             chmod +x duckdb
-            cd duckdb_sqlsmith & python3 scripts/run_fuzzer.py --duckfuzz --alltypes --shell=../duckdb
+            cd duckdb_sqlsmith
+            python3 scripts/run_fuzzer.py --duckfuzz --alltypes --shell=../duckdb
