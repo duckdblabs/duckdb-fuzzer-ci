@@ -116,6 +116,9 @@ jobs:
           sparse-checkout: |
             scripts
 
+      - name: kewl
+        run: echo "blah"
+
       - name: Download a single artifact
         uses: actions/download-artifact@v3
         with:
