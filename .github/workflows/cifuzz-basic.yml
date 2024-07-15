@@ -1,7 +1,6 @@
 name: cifuzz-basic
 on:
   workflow_dispatch:
-  repository_dispatch:
   push:
     branches:
       - '**'
