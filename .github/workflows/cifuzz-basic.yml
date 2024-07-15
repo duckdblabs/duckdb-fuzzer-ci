@@ -100,7 +100,7 @@ jobs:
             while [[ $(date -u +%s) -le $endtime ]]
             do
                 echo "Time Now: `date +%H:%M:%S`"
-                python3 scripts/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --shell=../duckdb
+                python3 scripts/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --shell=../duckdb --dry
             done
 
 
@@ -132,4 +132,4 @@ jobs:
         run: |
             chmod +x duckdb
             cd duckdb_sqlsmith
-            python3 scripts/run_fuzzer.py --duckfuzz --alltypes --shell=../duckdb
+            python3 scripts/run_fuzzer.py --duckfuzz --alltypes --shell=../duckdb --dry
