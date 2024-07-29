@@ -43,6 +43,7 @@ jobs:
           echo "duckdb_extension_load(sqlsmith 
             GIT_URL https://github.com/duckdb/duckdb_sqlsmith 
             GIT_TAG main 
+            APPLY_PATCHES
           )" > sqlsmith.cmake
 
       - name: Build
