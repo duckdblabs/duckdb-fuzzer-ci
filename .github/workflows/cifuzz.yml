@@ -69,7 +69,9 @@ jobs:
         enable_verification: [true, false]
         exclude:
           - enable_verification: true
-            fuzzer: [sqlsmith, duckfuzz_functions]
+            fuzzer: sqlsmith
+          - enable_verification: true
+            fuzzer: duckfuzz_functions
     env:
       FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
       DUCKDB_HASH: ${{ needs.build-duckdb.outputs.duckdb-hash }}
@@ -99,7 +101,7 @@ jobs:
             while [[ $(date -u +%s) -le $endtime ]]
             do
                 echo "Time Now: `date +%H:%M:%S`"
-                if [[ ${{ matrix.enable_verification == 'true' }} ]]; then
+                if [ "${{ matrix.enable_verification }}" == "true" ]; then
                   python3 scripts/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --enable_verification --max_queries=1000 --shell=../duckdb
                 else
                   python3 scripts/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --max_queries=1000 --shell=../duckdb
