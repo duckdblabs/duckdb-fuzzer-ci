@@ -100,12 +100,8 @@ jobs:
 
             while [[ $(date -u +%s) -le $endtime ]]
             do
-                echo "Time Now: `date +%H:%M:%S`"
-                if [ "${{ matrix.enable_verification }}" == "true" ]; then
-                  python3 scripts/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --enable_verification --max_queries=1000 --shell=../duckdb
-                else
-                  python3 scripts/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --max_queries=1000 --shell=../duckdb
-                fi
+              echo "Time Now: `date +%H:%M:%S`"
+              python3 scripts/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --enable_verification=${{ matrix.enable_verification }} --max_queries=1000 --shell=../duckdb
             done
 
 
