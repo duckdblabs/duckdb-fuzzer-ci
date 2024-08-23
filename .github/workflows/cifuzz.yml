@@ -26,7 +26,7 @@ jobs:
         shell: bash
         run: sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build ccache
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: duckdb/duckdb
           fetch-depth: 0
@@ -50,7 +50,7 @@ jobs:
         run: |
           EXTENSION_CONFIGS="sqlsmith.cmake" make debug
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: duckdb
           path: build/debug/duckdb
@@ -78,7 +78,7 @@ jobs:
 
     steps:
       - name: checkout duckdb_sqlsmith
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: duckdb/duckdb_sqlsmith
           path: duckdb_sqlsmith
@@ -86,7 +86,7 @@ jobs:
             scripts
 
       - name: Download a single artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: duckdb
 
@@ -103,7 +103,13 @@ jobs:
               echo "Time Now: `date +%H:%M:%S`"
               python3 scripts/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --enable_verification=${{ matrix.enable_verification }} --max_queries=1000 --shell=../duckdb
             done
-
+          
+      - name: Upload fuzz_clogs
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuzz_clogs_${{ matrix.fuzzer }}_${{ matrix.data }}
+          path: duckdb_sqlsmith/sqlsmith.complete.log
+          compression-level: 9
 
   check-issues:
     name: Check existing issues
@@ -115,7 +121,7 @@ jobs:
       DUCKDB_HASH: ${{ needs.build-duckdb.outputs.duckdb-hash }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: duckdb/duckdb_sqlsmith
           path: duckdb_sqlsmith
@@ -123,7 +129,7 @@ jobs:
             scripts
 
       - name: Download a single artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: duckdb
 
