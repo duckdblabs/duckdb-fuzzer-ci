@@ -98,10 +98,10 @@ jobs:
                 python3 scripts/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --max_queries=1000 --shell=../duckdb
             done
           
-      - name: Upload fuzz_clogs
+      - name: Upload fuzz_complete_logs
         uses: actions/upload-artifact@v4
         with:
-          name: fuzz_clogs_${{ matrix.fuzzer }}_${{ matrix.data }}
+          name: fuzz_complete_logs_${{ matrix.fuzzer }}_${{ matrix.data }}.sql
           path: duckdb_sqlsmith/sqlsmith.complete.log
           compression-level: 9
 
