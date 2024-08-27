@@ -30,7 +30,7 @@ jobs:
       timeout-minutes: 120
       dry: dry
       max_queries: 1000
-      FUZZEROFDUCKSKEY: ${{ github.FUZZEROFDUCKSKEY }}
+      FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
       DUCKDB_HASH: ${{ needs.build-duckdb.outputs.duckdb-hash }}
 
   check-issues:
