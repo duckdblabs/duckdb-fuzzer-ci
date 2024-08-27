@@ -27,8 +27,7 @@ jobs:
     with:
       fuzzer: ${{ matrix.fuzzer }}
       data: ${{ matrix.data }}
-      timeout-minutes: 1
-      # timeout-minutes: 120
+      timeout-minutes: 120
       dry: dry
       max_queries: 1
       # max_queries: 1000
