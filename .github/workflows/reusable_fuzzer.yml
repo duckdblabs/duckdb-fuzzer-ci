@@ -18,12 +18,11 @@ on:
         required: true
         type: number
         default: 1000
+    secrets:
       FUZZEROFDUCKSKEY:
         required: false
-        type: string
       DUCKDB_HASH: 
         required: false
-        type: string
 
 jobs:
   fuzzer:
