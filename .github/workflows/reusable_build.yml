@@ -24,13 +24,13 @@ jobs:
     outputs:
       duckdb-hash: ${{ steps.find-hash.outputs.hash }}
     env:
-      # BUILD_ICU: 1
-      # BUILD_JSON: 1
-      # BUILD_TPCH: 1
-      # BUILD_TPCDS: 1
-      # BUILD_PARQUET: 1
-      # BUILD_JEMALLOC: 1
-      # CRASH_ON_ASSERT: 1
+      BUILD_ICU: 1
+      BUILD_JSON: 1
+      BUILD_TPCH: 1
+      BUILD_TPCDS: 1
+      BUILD_PARQUET: 1
+      BUILD_JEMALLOC: 1
+      CRASH_ON_ASSERT: 1
       GEN: ninja
 
     steps:
