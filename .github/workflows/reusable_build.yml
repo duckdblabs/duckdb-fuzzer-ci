@@ -1,0 +1,69 @@
+name: Build
+on:
+  workflow_call:
+    inputs:
+      git_url: 
+        required: true
+        type: string
+      git_tag:
+        required: true
+        type: string
+      timeout-minutes:
+        required: true
+        type: number
+        default: 120
+    outputs:
+      hash:
+        value: ${{ jobs.build-duckdb.outputs.duckdb-hash }}
+
+jobs:
+  build-duckdb:
+    name: Build 
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    outputs:
+      duckdb-hash: ${{ steps.find-hash.outputs.hash }}
+    env:
+      # BUILD_ICU: 1
+      # BUILD_JSON: 1
+      # BUILD_TPCH: 1
+      # BUILD_TPCDS: 1
+      # BUILD_PARQUET: 1
+      # BUILD_JEMALLOC: 1
+      # CRASH_ON_ASSERT: 1
+      GEN: ninja
+
+    steps:
+      - name: Dependencies
+        shell: bash
+        run: sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build ccache
+
+      - uses: actions/checkout@v4
+        with:
+          repository: hmeriann/duckdb
+          fetch-depth: 0
+
+      - name: Setup Ccache
+        uses: hendrikmuhs/ccache-action@main
+  
+      - id: find-hash
+        run: echo "hash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+  
+      - name: create build sqlsmith extension file
+        shell: bash
+        run: |
+          echo "duckdb_extension_load(sqlsmith 
+            # GIT_URL ${{ inputs.git_url }}
+            GIT_URL https://github.com/${{ inputs.git_url }}/duckdb_sqlsmith 
+            GIT_TAG ${{ inputs.git_tag }}
+          )" > sqlsmith.cmake
+
+      - name: Build
+        shell: bash
+        run: |
+          EXTENSION_CONFIGS="sqlsmith.cmake" make debug
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: duckdb
+          path: build/debug/duckdb

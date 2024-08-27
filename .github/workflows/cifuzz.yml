@@ -7,103 +7,30 @@ on:
 jobs:
   build-duckdb:
     name: Build DuckDB
-    runs-on: ubuntu-latest
-    timeout-minutes: 120
-    outputs:
-      duckdb-hash: ${{ steps.find-hash.outputs.hash }}
-    env:
-      BUILD_ICU: 1
-      BUILD_JSON: 1
-      BUILD_TPCH: 1
-      BUILD_TPCDS: 1
-      BUILD_PARQUET: 1
-      BUILD_JEMALLOC: 1
-      CRASH_ON_ASSERT: 1
-      GEN: ninja
-
-    steps:
-      - name: Dependencies
-        shell: bash
-        run: sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build ccache
-
-      - uses: actions/checkout@v4
-        with:
-          repository: duckdb/duckdb
-          fetch-depth: 0
-
-      - name: Setup Ccache
-        uses: hendrikmuhs/ccache-action@main
-
-      - id: find-hash
-        run: echo "::set-output name=hash::$(git rev-parse HEAD)"
-
-      - name: create build sqlsmith extension file
-        shell: bash
-        run: |
-          echo "duckdb_extension_load(sqlsmith 
-            GIT_URL https://github.com/duckdb/duckdb_sqlsmith 
-            GIT_TAG main 
-          )" > sqlsmith.cmake
-
-      - name: Build
-        shell: bash
-        run: |
-          EXTENSION_CONFIGS="sqlsmith.cmake" make debug
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: duckdb
-          path: build/debug/duckdb
+    uses: ./.github/workflows/reusable_build.yml
+    with:
+      git_url: ${{ github.actor }}
+      git_tag: ${{ github.ref_name }}
+      timeout-minutes: 120
 
   fuzzer:
     name: Fuzzer
     needs:
     - build-duckdb
-    runs-on: ubuntu-latest
-    timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:
         fuzzer: [duckfuzz, sqlsmith, duckfuzz_functions]
         data: [alltypes, tpch, emptyalltypes]
-    env:
-      FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
+    uses: ./.github/workflows/reusable_fuzzer.yml
+    with:
+      fuzzer: ${{ matrix.fuzzer }}
+      data: ${{ matrix.data }}
+      timeout-minutes: 120
+      dry: dry
+      max_queries: 1000
+      FUZZEROFDUCKSKEY: ${{ github.FUZZEROFDUCKSKEY }}
       DUCKDB_HASH: ${{ needs.build-duckdb.outputs.duckdb-hash }}
-
-    steps:
-      - name: checkout duckdb_sqlsmith
-        uses: actions/checkout@v4
-        with:
-          repository: duckdb/duckdb_sqlsmith
-          path: duckdb_sqlsmith
-          sparse-checkout: |
-            scripts
-
-      - name: Download a single artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: duckdb
-
-      - name: Fuzz
-        shell: bash
-        run: |
-            chmod +x duckdb
-            runtime="10 minute"
-            endtime=$(date -ud "$runtime" +%s)
-            cd duckdb_sqlsmith
-
-            while [[ $(date -u +%s) -le $endtime ]]
-            do
-                echo "Time Now: `date +%H:%M:%S`"
-                python3 scripts/run_fuzzer.py --no_checks --${{ matrix.fuzzer }} --${{ matrix.data }} --max_queries=1000 --shell=../duckdb
-            done
-          
-      - name: Upload fuzz_complete_logs
-        uses: actions/upload-artifact@v4
-        with:
-          name: fuzz_complete_logs_${{ matrix.fuzzer }}_${{ matrix.data }}.sql
-          path: duckdb_sqlsmith/sqlsmith.complete.log
-          compression-level: 9
 
   check-issues:
     name: Check existing issues
