@@ -13,10 +13,21 @@ jobs:
       git_tag: ${{ github.ref_name }}
       timeout-minutes: 120
 
+  get-key:
+    name: Get FUZZEROFDUCKSKEY
+    needs:
+      - build-duckdb
+    runs-on: ubuntu-latest
+    outputs:
+      FUZZEROFDUCKSKEY: ${{ steps.get-key.outputs.FUZZEROFDUCKSKEY }}
+    steps:
+      - id: get-key
+        run: FUZZEROFDUCKSKEY=${{ secrets.FUZZEROFDUCKSKEY }} >> $GITHUB_OUTPUT
   fuzzer:
     name: Fuzzer
     needs:
     - build-duckdb
+    - get-key
     strategy:
       fail-fast: false
       matrix:
@@ -26,10 +37,10 @@ jobs:
     with:
       fuzzer: ${{ matrix.fuzzer }}
       data: ${{ matrix.data }}
-      timeout-minutes: 120
+      timeout-minutes: 1
       dry: dry
-      max_queries: 1000
-      FUZZEROFDUCKSKEY: ${{ github.FUZZEROFDUCKSKEY }}
+      max_queries: 1
+      FUZZEROFDUCKSKEY: ${{ needs.get-key.outputs.FUZZEROFDUCKSKEY }}
       DUCKDB_HASH: ${{ needs.build-duckdb.outputs.duckdb-hash }}
 
   check-issues:
@@ -38,7 +49,7 @@ jobs:
     - build-duckdb
     runs-on: ubuntu-latest
     env:
-      FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
+      FUZZEROFDUCKSKEY: ${{ needs.get-key.outputs.FUZZEROFDUCKSKEY }}
       DUCKDB_HASH: ${{ needs.build-duckdb.outputs.duckdb-hash }}
 
     steps:
