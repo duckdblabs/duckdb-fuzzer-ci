@@ -63,4 +63,3 @@ jobs:
         with:
           name: fuzz_complete_logs_${{ inputs.fuzzer }}_${{ inputs.data }}.sql
           path: duckdb_sqlsmith/sqlsmith.complete.log
-          compression-level: 9
