@@ -12,7 +12,7 @@ on:
         type: number
         default: 120
       dry:
-        required: true
+        required: false
         type: string
       max_queries:
         required: true
@@ -54,7 +54,7 @@ jobs:
           while [[ $(date -u +%s) -le $endtime ]]
           do
               echo "Time Now: `date +%H:%M:%S`"
-              python3 scripts/run_fuzzer.py --${{ inputs.dry }} --no_checks --${{ inputs.fuzzer }} --${{ inputs.data }} --max_queries=${{ inputs.max_queries }} --shell=../duckdb
+              python3 scripts/run_fuzzer.py ${{ inputs.dry }} --no_checks --${{ inputs.fuzzer }} --${{ inputs.data }} --max_queries=${{ inputs.max_queries }} --shell=../duckdb
           done
 
       - name: Upload fuzz_clogs
