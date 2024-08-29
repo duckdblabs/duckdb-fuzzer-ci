@@ -34,7 +34,7 @@ jobs:
       data: ${{ matrix.data }}
       timeout-minutes: 120
       max_queries: 1000
-      dry: false
+      no-git-checks: false
       enable_verification: ${{ matrix.enable_verification }}
     secrets:
       FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}

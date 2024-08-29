@@ -12,7 +12,7 @@ on:
         required: true
         type: number
         default: 120
-      dry:
+      no-git-checks:
         required: false
         type: boolean
         default: true
@@ -59,8 +59,8 @@ jobs:
           while [[ $(date -u +%s) -le $endtime ]]
           do
               echo "Time Now: `date +%H:%M:%S`"
-              python3 scripts/run_fuzzer.py --dry=${{ inputs.dry }} --no_checks --${{ inputs.fuzzer }} \
-                --${{ inputs.data }} --max_queries=${{ inputs.max_queries }} \
+              python3 scripts/run_fuzzer.py --no-git-checks=${{ inputs.no-git-checks }} --no_checks \
+                --${{ inputs.fuzzer }} --${{ inputs.data }} --max_queries=${{ inputs.max_queries }} \
                 --enable_verification=${{ inputs.enable_verification}} --shell=../duckdb
           done
 
