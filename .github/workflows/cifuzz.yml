@@ -28,6 +28,7 @@ jobs:
       data: ${{ matrix.data }}
       timeout-minutes: 120
       max_queries: 1000
+      dry: false
     secrets:
       FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
       DUCKDB_HASH: ${{ needs.build-duckdb.outputs.duckdb-hash }}
