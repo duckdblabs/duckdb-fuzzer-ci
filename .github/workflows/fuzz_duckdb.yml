@@ -1,3 +1,4 @@
+name: Fuzz DuckDb
 on:
   workflow_call:
     inputs:
