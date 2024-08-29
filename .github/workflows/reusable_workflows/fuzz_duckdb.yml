@@ -13,8 +13,9 @@ on:
         type: number
         default: 120
       dry:
-        required: true
+        required: false
         type: boolean
+        default: true
       max_queries:
         required: true
         type: number
