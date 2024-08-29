@@ -19,6 +19,9 @@ on:
         required: true
         type: number
         default: 1000
+      enable_verification:
+        required: true
+        type: boolean
     secrets:
       FUZZEROFDUCKSKEY:
         required: false
@@ -55,7 +58,9 @@ jobs:
           while [[ $(date -u +%s) -le $endtime ]]
           do
               echo "Time Now: `date +%H:%M:%S`"
-              python3 scripts/run_fuzzer.py --dry=${{ inputs.dry }} --no_checks --${{ inputs.fuzzer }} --${{ inputs.data }} --max_queries=${{ inputs.max_queries }} --shell=../duckdb
+              python3 scripts/run_fuzzer.py --dry=${{ inputs.dry }} --no_checks --${{ inputs.fuzzer }} \
+                --${{ inputs.data }} --max_queries=${{ inputs.max_queries }} \
+                --enable_verification=${{ inputs.enable_verification}} --shell=../duckdb
           done
 
       - name: Upload fuzz_clogs
