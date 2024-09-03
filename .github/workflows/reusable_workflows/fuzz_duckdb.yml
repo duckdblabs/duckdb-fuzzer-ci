@@ -63,8 +63,10 @@ jobs:
                 --${{ inputs.fuzzer }} --${{ inputs.data }} --max_queries=${{ inputs.max_queries }} \
                 --enable_verification=${{ inputs.enable_verification}} --shell=../duckdb
           done
+
       - name: Rename Artifact
         run: mv duckdb_sqlsmith/sqlsmith.complete.log duckdb_sqlsmith/fuzz_complete_logs_${{ inputs.fuzzer }}_${{ inputs.data }}_ev_is_${{ inputs.enable_verification }}.sql
+
       - name: Upload fuzz_clogs
         if: always()
         uses: actions/upload-artifact@v4
