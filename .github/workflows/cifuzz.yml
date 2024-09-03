@@ -7,7 +7,7 @@ on:
 jobs:
   build-duckdb:
     name: Build DuckDB
-    uses: ./.github/workflows/reusable_workflows/build_fuzzer.yml
+    uses: ./.github/workflows/build_fuzzer.yml
     with:
       git_url: ${{ github.repository }}
       git_tag: ${{ github.ref_name }}
@@ -28,7 +28,7 @@ jobs:
             fuzzer: sqlsmith
           - enable_verification: true
             fuzzer: duckfuzz_functions
-    uses: ./.github/workflows/reusable_workflows/fuzz_duckdb.yml
+    uses: ./.github/workflows/fuzz_duckdb.yml
     with:
       fuzzer: ${{ matrix.fuzzer }}
       data: ${{ matrix.data }}
