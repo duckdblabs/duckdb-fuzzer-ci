@@ -40,7 +40,7 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          repository: hmeriann/duckdb
+          repository: duckdb/duckdb
           fetch-depth: 0
 
       - name: Setup Ccache
