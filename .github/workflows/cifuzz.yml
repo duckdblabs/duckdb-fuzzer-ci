@@ -30,6 +30,7 @@ jobs:
             fuzzer: duckfuzz_functions
     uses: ./.github/workflows/fuzz_duckdb.yml
     with:
+      repo: duckdb/duckdb_sqlsmith
       fuzzer: ${{ matrix.fuzzer }}
       data: ${{ matrix.data }}
       timeout-minutes: 120

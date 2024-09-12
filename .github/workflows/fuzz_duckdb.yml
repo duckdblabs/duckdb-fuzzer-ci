@@ -23,6 +23,9 @@ on:
       enable_verification:
         required: true
         type: boolean
+      repo: 
+        required: true
+        type: string
     secrets:
       FUZZEROFDUCKSKEY:
         required: false
@@ -38,7 +41,7 @@ jobs:
       - name: checkout duckdb_sqlsmith
         uses: actions/checkout@v4
         with:
-          repository: hmeriann/duckdb_sqlsmith
+          repository: ${{ inputs.repo }}
           path: duckdb_sqlsmith
           sparse-checkout: |
             scripts
@@ -75,4 +78,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: fuzz_complete_logs_${{ inputs.fuzzer }}_${{ inputs.data }}_ev_is_${{ inputs.enable_verification }}.sql
-          path: duckdb_sqlsmith/sqlsmith.complete.log
+          path: duckdb_sqlsmith/fuzz_complete_logs_${{ inputs.fuzzer }}_${{ inputs.data }}_ev_is_${{ inputs.enable_verification }}.sql
