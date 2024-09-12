@@ -24,9 +24,6 @@ on:
         required: false
         type: boolean
         default: false
-      repo: 
-        required: true
-        type: string
     secrets:
       FUZZEROFDUCKSKEY:
         required: false
@@ -42,7 +39,7 @@ jobs:
       - name: checkout duckdb_sqlsmith
         uses: actions/checkout@v4
         with:
-          repository: ${{ inputs.repo }}
+          repository: duckdb/duckdb_sqlsmith
           path: duckdb_sqlsmith
           sparse-checkout: |
             scripts
