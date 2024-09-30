@@ -9,7 +9,7 @@ on:
         required: true
         type: string
       timeout-minutes:
-        required: true
+        required: false
         type: number
         default: 120
       no-git-checks:
@@ -17,12 +17,13 @@ on:
         type: boolean
         default: true
       max_queries:
-        required: true
+        required: false
         type: number
         default: 1000
       enable_verification:
-        required: true
+        required: false
         type: boolean
+        default: false
       randoms_config_filepath:
         required: false
         type: string
