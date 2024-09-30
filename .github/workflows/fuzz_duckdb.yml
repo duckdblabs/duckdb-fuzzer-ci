@@ -21,9 +21,11 @@ on:
         type: number
         default: 1000
       enable_verification:
-        required: false
+        required: true
         type: boolean
-        default: false
+      repo: 
+        required: true
+        type: string
     secrets:
       FUZZEROFDUCKSKEY:
         required: false
