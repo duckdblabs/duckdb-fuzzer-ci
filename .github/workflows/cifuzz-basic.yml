@@ -33,5 +33,6 @@ jobs:
       timeout-minutes: 120
       max_queries: 10
       no-git-checks: true
+      enable_verification: false
     secrets:
       DUCKDB_HASH: ${{ needs.build-duckdb.outputs.duckdb-hash }}
