@@ -9,7 +9,7 @@ on:
         required: true
         type: string
       timeout-minutes:
-        required: true
+        required: false
         type: number
         default: 120
     outputs:
