@@ -15,7 +15,6 @@ jobs:
     with:
       git_url: ${{ github.repository }}
       git_tag: ${{ github.ref_name }}
-      timeout-minutes: 120
 
   fuzzer:
     name: Fuzzer
@@ -30,7 +29,6 @@ jobs:
     with:
       fuzzer: ${{ matrix.fuzzer }}
       data: ${{ matrix.data }}
-      timeout-minutes: 120
       max_queries: 10
       no-git-checks: true
     secrets:

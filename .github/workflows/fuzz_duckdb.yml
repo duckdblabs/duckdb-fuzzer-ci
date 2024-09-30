@@ -9,7 +9,7 @@ on:
         required: true
         type: string
       timeout-minutes:
-        required: true
+        required: false
         type: number
         default: 120
       no-git-checks:
@@ -17,12 +17,16 @@ on:
         type: boolean
         default: true
       max_queries:
-        required: true
+        required: false
         type: number
         default: 1000
       enable_verification:
-        required: true
+        required: false
         type: boolean
+        default: false
+      randoms_config_filepath:
+        required: false
+        type: string
     secrets:
       FUZZEROFDUCKSKEY:
         required: false
@@ -38,7 +42,7 @@ jobs:
       - name: checkout duckdb_sqlsmith
         uses: actions/checkout@v4
         with:
-          repository: hmeriann/duckdb_sqlsmith
+          repository: duckdb/duckdb_sqlsmith
           path: duckdb_sqlsmith
           sparse-checkout: |
             scripts
@@ -64,15 +68,15 @@ jobs:
               echo "Time Now: `date +%H:%M:%S`"
               python3 scripts/run_fuzzer.py --no-git-checks=${{ inputs.no-git-checks }} --no_checks \
                 --${{ inputs.fuzzer }} --${{ inputs.data }} --max_queries=${{ inputs.max_queries }} \
-                --enable_verification=${{ inputs.enable_verification}} --shell=../duckdb
+                --enable_verification=${{ inputs.enable_verification}} --randoms_config_filepath=${{ inputs.randoms_config_filepath }} --shell=../duckdb
           done
 
       - name: Rename Artifact
-        run: mv duckdb_sqlsmith/sqlsmith.complete.log duckdb_sqlsmith/fuzz_complete_logs_${{ inputs.fuzzer }}_${{ inputs.data }}_ev_is_${{ inputs.enable_verification }}.sql
+        run: mv duckdb_sqlsmith/sqlsmith.complete.log duckdb_sqlsmith/fuzz_complete_logs_${{ inputs.fuzzer }}_${{ inputs.data }}_ev_is_${{ inputs.enable_verification }}_${{ inputs.randoms_config_filepath }}.sql
 
       - name: Upload fuzz_clogs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: fuzz_complete_logs_${{ inputs.fuzzer }}_${{ inputs.data }}_ev_is_${{ inputs.enable_verification }}.sql
-          path: duckdb_sqlsmith/sqlsmith.complete.log
+          name: fuzz_complete_logs_${{ inputs.fuzzer }}_${{ inputs.data }}_ev_is_${{ inputs.enable_verification }}_${{ inputs.randoms_config_filepath }}.sql
+          path: duckdb_sqlsmith/duckdb_sqlsmith/fuzz_complete_logs_${{ inputs.fuzzer }}_${{ inputs.data }}_ev_is_${{ inputs.enable_verification }}_${{ inputs.randoms_config_filepath }}.sql

@@ -11,31 +11,44 @@ jobs:
     with:
       git_url: duckdb/duckdb_sqlsmith
       git_tag: main
-      timeout-minutes: 120
 
   fuzzer:
-    name: Fuzzer
+    name: Fuzz sqlsmith and duckfuzz_functions
     needs:
     - build-duckdb
     strategy:
       fail-fast: false
       matrix:
-        fuzzer: [duckfuzz, sqlsmith, duckfuzz_functions]
+        fuzzer: [sqlsmith, duckfuzz_functions]
         data: [alltypes, tpch, emptyalltypes]
-        enable_verification: [true, false]
-        exclude:
-          - enable_verification: true
-            fuzzer: sqlsmith
-          - enable_verification: true
-            fuzzer: duckfuzz_functions
     uses: ./.github/workflows/fuzz_duckdb.yml
     with:
       fuzzer: ${{ matrix.fuzzer }}
       data: ${{ matrix.data }}
-      timeout-minutes: 120
-      max_queries: 1000
+      no-git-checks: false
+    secrets:
+      FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
+      DUCKDB_HASH: ${{ needs.build-duckdb.outputs.duckdb-hash }}
+  
+  duckfuzz:
+    name: Duckfuzz
+    needs:
+    - build-duckdb
+    - fuzzer
+    strategy:
+      fail-fast: false
+      matrix:
+        fuzzer: [duckfuzz]
+        data: [alltypes, tpch, emptyalltypes]
+        enable_verification: [true, false]
+        randoms_config_filepath: [ "config.json" , "" ]
+    uses: ./.github/workflows/fuzz_duckdb.yml
+    with:
+      fuzzer: ${{ matrix.fuzzer }}
+      data: ${{ matrix.data }}
       no-git-checks: false
       enable_verification: ${{ matrix.enable_verification }}
+      randoms_config_filepath: ${{ matrix.randoms_config_filepath }}
     secrets:
       FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
       DUCKDB_HASH: ${{ needs.build-duckdb.outputs.duckdb-hash }}
