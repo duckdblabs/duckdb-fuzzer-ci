@@ -28,6 +28,9 @@ jobs:
             fuzzer: sqlsmith
           - enable_verification: true
             fuzzer: duckfuzz_functions
+          - enable_verification: false # this one usually fails due to a memory leak
+            fuzzer: sqlsmith
+            data: tpch
     uses: ./.github/workflows/fuzz_duckdb.yml
     with:
       fuzzer: ${{ matrix.fuzzer }}

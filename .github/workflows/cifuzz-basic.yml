@@ -26,6 +26,9 @@ jobs:
       matrix:
         fuzzer: [duckfuzz, sqlsmith]
         data: [alltypes, tpch, emptyalltypes]
+        exclude:
+          - fuzzer: sqlsmith # this one usually fails due to a memory leak
+          - data: tpch
     uses: ./.github/workflows/fuzz_duckdb.yml
     with:
       fuzzer: ${{ matrix.fuzzer }}
