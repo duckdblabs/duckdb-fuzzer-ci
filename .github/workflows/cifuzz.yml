@@ -9,7 +9,7 @@ jobs:
     name: Build DuckDB
     uses: ./.github/workflows/build_fuzzer.yml
     with:
-      git_url: duckdb/duckdb_sqlsmith
+      git_url: duckdb/duckdb-sqlsmith
       git_tag: main
       timeout-minutes: 120
 
@@ -39,6 +39,7 @@ jobs:
       max_queries: 1000
       no-git-checks: false
       enable_verification: ${{ matrix.enable_verification }}
+      repo: ${{ env.GITHUB_REPOSITORY }}
     secrets:
       FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
       DUCKDB_HASH: ${{ needs.build-duckdb.outputs.duckdb-hash }}
