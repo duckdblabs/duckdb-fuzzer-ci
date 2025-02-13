@@ -11,3 +11,5 @@ jobs:
       ref: main
       fuzzer: csv_multi_param_fuzzer
       fuzzTime: 10
+    secrets:
+      FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
