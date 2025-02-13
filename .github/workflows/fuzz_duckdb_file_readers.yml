@@ -5,7 +5,8 @@ on:
 jobs:
   run-aflplusplus-fuzzer:
     name: Run AFL++ fuzzer
-    uses: duckdblabs/duckdb-aflplusplus/.github/workflows/RunFuzzer.yml@main
+    # dev mode: checkout branch @register_issues
+    uses: duckdblabs/duckdb-aflplusplus/.github/workflows/RunFuzzer.yml@register_issues
     with:
       ref: main
       fuzzer: csv_multi_param_fuzzer
