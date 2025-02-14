@@ -13,3 +13,4 @@ jobs:
       fuzzTime: 10
     secrets:
       FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
+      FUZZEROFDUCKSSSHKEY: ${{ secrets.FUZZEROFDUCKSSSHKEY }}
