@@ -20,7 +20,7 @@ jobs:
     uses: duckdblabs/duckdb-aflplusplus/.github/workflows/RunFuzzer.yml@register_issues
     strategy:
       matrix:
-        branch: ${{ needs.get-branches.outputs.branches }}
+        branch: ${{ fromJSON(needs.get-branches.outputs.branches) }}
         fuzzer: [csv_multi_param_fuzzer, json_multi_param_fuzzer, parquet_multi_param_fuzzer]
     with:
       fuzzer: ${{ matrix.fuzzer }}
