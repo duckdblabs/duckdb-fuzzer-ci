@@ -41,6 +41,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: duckdb/duckdb
+          ref: 134e0ae1b2a4b3935f08e7ce7643f52641aaec97
           fetch-depth: 0
 
       - name: Setup Ccache
