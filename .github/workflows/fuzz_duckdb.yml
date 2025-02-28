@@ -41,7 +41,8 @@ jobs:
       - name: checkout duckdb_sqlsmith
         uses: actions/checkout@v4
         with:
-          repository: duckdb/duckdb_sqlsmith
+          repository: c-herrewijn/duckdb-sqlsmith
+          ref: remove_stack_trace_from_issue_title
           path: duckdb_sqlsmith
           sparse-checkout: |
             scripts
