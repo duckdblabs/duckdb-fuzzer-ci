@@ -29,8 +29,8 @@ on:
     secrets:
       FUZZEROFDUCKSKEY:
         required: false
-      DUCKDB_HASH: 
-        required: false
+      DUCKDB_HASH:
+        required: true
 
 jobs:
   fuzzer:

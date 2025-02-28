@@ -42,7 +42,7 @@ jobs:
       repo: ${{ github.repository }}
     secrets:
       FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
-      DUCKDB_HASH: ${{ needs.build-duckdb.outputs.duckdb-hash }}
+      DUCKDB_HASH: ${{ needs.build-duckdb.outputs.hash }}
 
   check-issues:
     name: Check existing issues
