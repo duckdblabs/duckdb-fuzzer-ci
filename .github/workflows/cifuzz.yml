@@ -51,7 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
-      DUCKDB_HASH: ${{ needs.build-duckdb.outputs.duckdb-hash }}
+      DUCKDB_HASH: ${{ needs.build-duckdb.outputs.hash }}
 
     steps:
       - uses: actions/checkout@v4
