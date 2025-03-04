@@ -2,7 +2,7 @@ name: Fuzz DuckDb
 on:
   workflow_call:
     inputs:
-      fuzzer: 
+      fuzzer:
         required: true
         type: string
       data:
@@ -23,14 +23,14 @@ on:
       enable_verification:
         required: true
         type: boolean
-      repo: 
+      repo:
         required: true
         type: string
     secrets:
       FUZZEROFDUCKSKEY:
         required: false
-      DUCKDB_HASH: 
-        required: false
+      DUCKDB_HASH:
+        required: true
 
 jobs:
   fuzzer:
@@ -61,7 +61,7 @@ jobs:
           runtime="1 minute"
           endtime=$(date -ud "$runtime" +%s)
           cd duckdb_sqlsmith
-      
+
           while [[ $(date -u +%s) -le $endtime ]]
           do
               echo "Time Now: `date +%H:%M:%S`"
