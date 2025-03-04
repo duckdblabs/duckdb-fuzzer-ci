@@ -1,6 +1,8 @@
 name: Fuzz DuckDb File Readers
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "42 0 * * 6"
 
 jobs:
   get-branches:
@@ -17,8 +19,7 @@ jobs:
   run-aflplusplus-fuzzer:
     name: Run AFL++ fuzzer
     needs: get-branches
-    # dev mode: checkout branch @register_issues
-    uses: duckdblabs/duckdb-aflplusplus/.github/workflows/RunFuzzer.yml@register_issues
+    uses: duckdblabs/duckdb-aflplusplus/.github/workflows/RunFuzzer.yml@main
     strategy:
       matrix:
         branch: ${{ fromJSON(needs.get-branches.outputs.branches) }}
@@ -26,6 +27,6 @@ jobs:
     with:
       fuzzer: ${{ matrix.fuzzer }}
       ref: ${{ matrix.branch }}
-      fuzzTime: 600
+      fuzzTime: 18000
     secrets:
       FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
