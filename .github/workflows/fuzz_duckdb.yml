@@ -2,7 +2,7 @@ name: Fuzz DuckDb
 on:
   workflow_call:
     inputs:
-      fuzzer: 
+      fuzzer:
         required: true
         type: string
       data:
@@ -23,7 +23,7 @@ on:
       enable_verification:
         required: true
         type: boolean
-      repo: 
+      repo:
         required: true
         type: string
     secrets:
@@ -41,8 +41,7 @@ jobs:
       - name: checkout duckdb_sqlsmith
         uses: actions/checkout@v4
         with:
-          repository: c-herrewijn/duckdb-sqlsmith
-          ref: remove_stack_trace_from_issue_title
+          repository: duckdb/duckdb-sqlsmith
           path: duckdb_sqlsmith
           sparse-checkout: |
             scripts
@@ -62,7 +61,7 @@ jobs:
           runtime="1 minute"
           endtime=$(date -ud "$runtime" +%s)
           cd duckdb_sqlsmith
-      
+
           while [[ $(date -u +%s) -le $endtime ]]
           do
               echo "Time Now: `date +%H:%M:%S`"
