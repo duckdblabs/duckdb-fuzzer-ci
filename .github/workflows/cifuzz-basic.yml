@@ -39,4 +39,4 @@ jobs:
       enable_verification: false
       repo: ${{ github.repository }}
     secrets:
-      DUCKDB_HASH: ${{ needs.build-duckdb.outputs.duckdb-hash }}
+      DUCKDB_HASH: ${{ needs.build-duckdb.outputs.hash }}
