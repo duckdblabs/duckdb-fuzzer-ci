@@ -1,12 +1,32 @@
 name: Fuzz DuckDb File Readers
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "42 0 * * 6"
 
 jobs:
+  get-branches:
+    name: Get DuckDB Branches
+    runs-on: ubuntu-24.04
+    outputs:
+      branches: ${{ steps.call-duckdb-api.outputs.branches }}
+    steps:
+      - id: call-duckdb-api
+        run: |
+          # echo "branches=$(curl -s https://api.github.com/repos/duckdb/duckdb/branches | jq -c '[.[].name]')" >> "$GITHUB_OUTPUT"
+          echo "branches=[\"main\",\"v1.2-histrionicus\"]" >> "$GITHUB_OUTPUT"
+
   run-aflplusplus-fuzzer:
     name: Run AFL++ fuzzer
+    needs: get-branches
     uses: duckdblabs/duckdb-aflplusplus/.github/workflows/RunFuzzer.yml@main
+    strategy:
+      matrix:
+        branch: ${{ fromJSON(needs.get-branches.outputs.branches) }}
+        fuzzer: [csv_multi_param_fuzzer, json_multi_param_fuzzer, parquet_multi_param_fuzzer]
     with:
-      ref: main
-      fuzzer: csv_multi_param_fuzzer
-      fuzzTime: 10
+      fuzzer: ${{ matrix.fuzzer }}
+      ref: ${{ matrix.branch }}
+      fuzzTime: 18000
+    secrets:
+      FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
