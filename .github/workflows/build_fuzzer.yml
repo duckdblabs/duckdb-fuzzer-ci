@@ -2,7 +2,7 @@ name: Build Fuzzer
 on:
   workflow_call:
     inputs:
-      git_url: 
+      git_url:
         required: true
         type: string
       git_tag:
@@ -18,7 +18,7 @@ on:
 
 jobs:
   build-duckdb:
-    name: Build 
+    name: Build
     runs-on: ubuntu-latest
     timeout-minutes: ${{ inputs.timeout-minutes }}
     outputs:
@@ -31,6 +31,7 @@ jobs:
       BUILD_PARQUET: 1
       BUILD_JEMALLOC: 1
       CRASH_ON_ASSERT: 1
+      EXPORT_DYNAMIC_SYMBOLS: 1
       GEN: ninja
 
     steps:
@@ -45,14 +46,14 @@ jobs:
 
       - name: Setup Ccache
         uses: hendrikmuhs/ccache-action@main
-  
+
       - id: find-hash
         run: echo "hash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-  
+
       - name: create build sqlsmith extension file
         shell: bash
         run: |
-          echo "duckdb_extension_load(sqlsmith 
+          echo "duckdb_extension_load(sqlsmith
             GIT_URL https://github.com/${{ inputs.git_url }}
             GIT_TAG ${{ inputs.git_tag }}
           )" > sqlsmith.cmake
