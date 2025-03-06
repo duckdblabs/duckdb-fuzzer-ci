@@ -56,7 +56,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: duckdb/duckdb-sqlsmith
+          repository: c-herrewijn/duckdb-sqlsmith
+          ref: check-for-duplicates-immediately-before-creating-issue
           path: duckdb_sqlsmith
           sparse-checkout: |
             scripts
