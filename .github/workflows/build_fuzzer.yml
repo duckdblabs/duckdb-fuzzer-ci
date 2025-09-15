@@ -53,8 +53,10 @@ jobs:
       - name: Build
         shell: bash
         run: |
-          CORE_EXTENSIONS="sqlsmith" make debug
-          ./build/debug/duckdb -c "INSTALL sqlsmith FROM 'build/debug/repository';"
+          echo "duckdb_extension_load(sqlsmith
+            GIT_URL https://github.com/${{ inputs.git_url }}
+            GIT_TAG ${{ inputs.git_tag }}
+          )" > sqlsmith.cmake
 
       - uses: actions/upload-artifact@v4
         with:
