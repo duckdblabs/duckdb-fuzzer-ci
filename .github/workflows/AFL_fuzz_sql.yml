@@ -1,0 +1,15 @@
+name: AFL++ Fuzz DuckDB SQL
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "42 22 * * *"
+
+jobs:
+  run-aflplusplus-sql-fuzzer:
+    name: Run AFL++ sql fuzzer
+    uses: duckdblabs/duckdb-aflplusplus/.github/workflows/RunSQLFuzzer.yml@main
+    with:
+      ref: main
+      fuzzTime: 18000
+    secrets:
+      FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
