@@ -1,4 +1,4 @@
-name: Fuzz DuckDb File Readers
+name: AFL++ Fuzz DuckDB File Readers
 on:
   workflow_dispatch:
   schedule:
@@ -16,8 +16,8 @@ jobs:
           # echo "branches=$(curl -s https://api.github.com/repos/duckdb/duckdb/branches | jq -c '[.[].name]')" >> "$GITHUB_OUTPUT"
           echo "branches=[\"main\",\"v1.4-andium\"]" >> "$GITHUB_OUTPUT"
 
-  run-aflplusplus-fuzzer:
-    name: Run AFL++ fuzzer
+  run-aflplusplus-file-fuzzer:
+    name: Run AFL++ file fuzzer
     needs: get-branches
     uses: duckdblabs/duckdb-aflplusplus/.github/workflows/RunFuzzer.yml@main
     strategy:
