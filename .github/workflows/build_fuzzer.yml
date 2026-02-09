@@ -32,6 +32,7 @@ jobs:
       BUILD_JEMALLOC: 1
       CRASH_ON_ASSERT: 1
       EXPORT_DYNAMIC_SYMBOLS: 1
+      CMAKE_BUILD_PARALLEL_LEVEL: 2
       GEN: ninja
 
     steps:
