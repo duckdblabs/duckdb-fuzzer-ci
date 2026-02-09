@@ -40,7 +40,7 @@ jobs:
         uses: endersonmenezes/free-disk-space@v3
         if: runner.os == 'Linux'
         with:
-          rm_cmd: "rmz" # apparently faster
+          rm_cmd: "rm"
           remove_android: true
           remove_dotnet: true
           remove_haskell: true
