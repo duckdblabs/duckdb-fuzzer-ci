@@ -32,6 +32,7 @@ jobs:
       BUILD_JEMALLOC: 1
       CRASH_ON_ASSERT: 1
       EXPORT_DYNAMIC_SYMBOLS: 1
+      CMAKE_BUILD_PARALLEL_LEVEL: 2
       GEN: ninja
 
     steps:
@@ -43,6 +44,8 @@ jobs:
         with:
           repository: duckdb/duckdb
           fetch-depth: 0
+
+      - uses: ./.github/actions/cleanup_runner
 
       - name: Setup Ccache
         uses: hendrikmuhs/ccache-action@main
