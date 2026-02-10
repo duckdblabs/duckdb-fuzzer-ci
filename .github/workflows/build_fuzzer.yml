@@ -36,17 +36,6 @@ jobs:
       GEN: ninja
 
     steps:
-      - name: Free disk space (Ubuntu)
-        uses: endersonmenezes/free-disk-space@v3
-        if: runner.os == 'Linux'
-        with:
-          rm_cmd: "rm"
-          remove_android: true
-          remove_dotnet: true
-          remove_haskell: true
-          remove_tool_cache: true
-          remove_folders: /opt/az /opt/ghc /opt/google /opt/hostedtoolcache /opt/microsoft /usr/lib/firefox /usr/lib/jvm /usr/local/.ghcup /usr/local/julia* /usr/local/lib/android /usr/local/share/boost /usr/local/share/chromium /usr/local/share/powershell /usr/share/dotnet /usr/share/swift /var/lib/apt/lists/*
-
       - name: Dependencies
         shell: bash
         run: sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build ccache
@@ -55,6 +44,8 @@ jobs:
         with:
           repository: duckdb/duckdb
           fetch-depth: 0
+
+      - uses: ./.github/actions/cleanup_runner
 
       - name: Setup Ccache
         uses: hendrikmuhs/ccache-action@main
