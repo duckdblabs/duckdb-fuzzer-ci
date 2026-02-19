@@ -14,7 +14,7 @@ jobs:
       - id: call-duckdb-api
         run: |
           # echo "branches=$(curl -s https://api.github.com/repos/duckdb/duckdb/branches | jq -c '[.[].name]')" >> "$GITHUB_OUTPUT"
-          echo "branches=[\"main\",\"v1.4-andium\"]" >> "$GITHUB_OUTPUT"
+          echo "branches=[\"main\",\"v1.4-andium\",\"v1.5-variegata\"]" >> "$GITHUB_OUTPUT"
 
   run-aflplusplus-file-fuzzer:
     name: Run AFL++ file fuzzer
