@@ -54,7 +54,7 @@ jobs:
       DUCKDB_HASH: ${{ needs.build-duckdb.outputs.hash }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: duckdb/duckdb_sqlsmith
           path: duckdb_sqlsmith
@@ -62,7 +62,7 @@ jobs:
             scripts
 
       - name: Download a single artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: duckdb
 

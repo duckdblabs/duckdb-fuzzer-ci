@@ -39,7 +39,7 @@ jobs:
     timeout-minutes: ${{ inputs.timeout-minutes }}
     steps:
       - name: checkout duckdb_sqlsmith
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: duckdb/duckdb_sqlsmith
           path: duckdb_sqlsmith
@@ -47,7 +47,7 @@ jobs:
             scripts
 
       - name: Download a single artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: duckdb
 
@@ -75,7 +75,7 @@ jobs:
 
       - name: Upload fuzz_clogs
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: fuzz_complete_logs_${{ inputs.fuzzer }}_${{ inputs.data }}_ev_is_${{ inputs.enable_verification }}.sql
           path: duckdb_sqlsmith/fuzz_complete_logs_${{ inputs.fuzzer }}_${{ inputs.data }}_ev_is_${{ inputs.enable_verification }}.sql
