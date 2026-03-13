@@ -38,7 +38,7 @@ jobs:
     steps:
       - name: Dependencies
         shell: bash
-        run: sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build ccache
+        run: sudo apt-get update -y -qq && sudo apt-get install -y -qq ninja-build ccache mold
 
       - uses: actions/checkout@v4
         with:
