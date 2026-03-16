@@ -27,6 +27,6 @@ jobs:
     with:
       fuzzer: ${{ matrix.fuzzer }}
       ref: ${{ matrix.branch }}
-      fuzzTime: 18000
+      fuzzTime: 14400
     secrets:
       FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}

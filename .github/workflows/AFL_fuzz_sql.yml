@@ -10,6 +10,6 @@ jobs:
     uses: duckdblabs/duckdb-aflplusplus/.github/workflows/RunSQLFuzzer.yml@main
     with:
       ref: main
-      fuzzTime: 18000
+      fuzzTime: 14400
     secrets:
       FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
