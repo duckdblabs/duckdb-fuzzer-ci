@@ -56,9 +56,14 @@ jobs:
       - name: create build sqlsmith extension file
         shell: bash
         run: |
+          APPLY_PATCHES=""
+          if ls .github/patches/extensions/sqlsmith/*.patch 2>/dev/null; then
+            APPLY_PATCHES="APPLY_PATCHES"
+          fi
           echo "duckdb_extension_load(sqlsmith
             GIT_URL https://github.com/${{ inputs.git_url }}
             GIT_TAG ${{ inputs.git_tag }}
+            $APPLY_PATCHES
           )" > sqlsmith.cmake
 
       - name: Build
