@@ -2,7 +2,7 @@ name: AFL++ Fuzz DuckDB SQL
 on:
   workflow_dispatch:
   schedule:
-    - cron: "42 22 * * *"
+    - cron: "42 0/6 * * *"
 
 jobs:
   run-aflplusplus-sql-fuzzer:
