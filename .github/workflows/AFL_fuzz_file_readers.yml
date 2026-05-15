@@ -1,32 +1,44 @@
 name: AFL++ Fuzz DuckDB File Readers
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "42 23 * * *"
+    inputs:
+      csv:
+        description: Fuzz CSV inputs
+        type: boolean
+        default: true
+      json:
+        description: Fuzz JSON inputs
+        type: boolean
+        default: true
+      parquet:
+        description: Fuzz Parquet inputs
+        type: boolean
+        default: true
+      duckdbRepo:
+        description: duckdb repository
+        type: string
+        default: duckdb/duckdb
+      duckdb_ref:
+        description: duckdb branch, tag, or full-length SHA
+        type: string
+        default: main
+      fuzzTime:
+        description: fuzz time (seconds)
+        type: number
+        default: 1200
 
 jobs:
-  get-branches:
-    name: Get DuckDB Branches
-    runs-on: ubuntu-24.04
-    outputs:
-      branches: ${{ steps.call-duckdb-api.outputs.branches }}
-    steps:
-      - id: call-duckdb-api
-        run: |
-          # echo "branches=$(curl -s https://api.github.com/repos/duckdb/duckdb/branches | jq -c '[.[].name]')" >> "$GITHUB_OUTPUT"
-          echo "branches=[\"main\",\"v1.5-variegata\"]" >> "$GITHUB_OUTPUT"
-
-  run-aflplusplus-file-fuzzer:
-    name: Run AFL++ file fuzzer
-    needs: get-branches
-    uses: duckdblabs/duckdb-aflplusplus/.github/workflows/RunFuzzer.yml@main
-    strategy:
-      matrix:
-        branch: ${{ fromJSON(needs.get-branches.outputs.branches) }}
-        fuzzer: [csv_multi_param_fuzzer, json_multi_param_fuzzer, parquet_multi_param_fuzzer]
+  run-file-reader-fuzzer:
+    name: Run AFL++ File Reader Fuzzer
+    # TODO: once parallel-ci-build is merged, update both refs below to main
+    uses: duckdblabs/duckdb-aflplusplus/.github/workflows/FileReaderFuzzer.yml@parallel-ci-build
     with:
-      fuzzer: ${{ matrix.fuzzer }}
-      ref: ${{ matrix.branch }}
-      fuzzTime: 14400
+      csv: ${{ inputs.csv }}
+      json: ${{ inputs.json }}
+      parquet: ${{ inputs.parquet }}
+      duckdbRepo: ${{ inputs.duckdbRepo }}
+      duckdb_ref: ${{ inputs.duckdb_ref }}
+      duckdb_aflplusplus_ref: parallel-ci-build  # TODO: move to main (see above)
+      fuzzTime: ${{ inputs.fuzzTime }}
     secrets:
       FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
