@@ -39,6 +39,6 @@ jobs:
       duckdbRepo: ${{ inputs.duckdbRepo }}
       duckdb_ref: ${{ inputs.duckdb_ref }}
       duckdb_aflplusplus_ref: parallel-ci-build  # TODO: move to main (see above)
-      fuzzTime: ${{ inputs.fuzzTime }}
+      fuzzTime: ${{ fromJSON(inputs.fuzzTime) }}
     secrets:
       FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
