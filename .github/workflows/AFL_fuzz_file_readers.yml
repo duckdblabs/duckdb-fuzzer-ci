@@ -32,7 +32,7 @@ on:
 jobs:
   run-file-reader-fuzzer:
     name: Run AFL++ File Reader Fuzzer
-    uses: duckdblabs/duckdb-aflplusplus/.github/workflows/FileReaderFuzzer.yml
+    uses: duckdblabs/duckdb-aflplusplus/.github/workflows/FileReaderFuzzer.yml@main
     with:
       csv: ${{ inputs.csv }}
       json: ${{ inputs.json }}
