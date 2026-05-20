@@ -1,5 +1,7 @@
 name: AFL++ Fuzz DuckDB File Readers
 on:
+  schedule:
+    - cron: "42 23 * * *"
   workflow_dispatch:
     inputs:
       csv:
@@ -25,20 +27,18 @@ on:
       fuzzTime:
         description: fuzz time (seconds)
         type: number
-        default: 1200
+        default: 3600
 
 jobs:
   run-file-reader-fuzzer:
     name: Run AFL++ File Reader Fuzzer
-    # TODO: once parallel-ci-build is merged, update both refs below to main
-    uses: duckdblabs/duckdb-aflplusplus/.github/workflows/FileReaderFuzzer.yml@parallel-ci-build
+    uses: duckdblabs/duckdb-aflplusplus/.github/workflows/FileReaderFuzzer.yml
     with:
       csv: ${{ inputs.csv }}
       json: ${{ inputs.json }}
       parquet: ${{ inputs.parquet }}
       duckdbRepo: ${{ inputs.duckdbRepo }}
       duckdb_ref: ${{ inputs.duckdb_ref }}
-      duckdb_aflplusplus_ref: parallel-ci-build  # TODO: move to main (see above)
       fuzzTime: ${{ fromJSON(inputs.fuzzTime) }}
     secrets:
       FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
