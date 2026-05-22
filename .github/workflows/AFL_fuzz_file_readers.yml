@@ -3,42 +3,17 @@ on:
   schedule:
     - cron: "42 23 * * *"
   workflow_dispatch:
-    inputs:
-      csv:
-        description: Fuzz CSV inputs
-        type: boolean
-        default: true
-      json:
-        description: Fuzz JSON inputs
-        type: boolean
-        default: true
-      parquet:
-        description: Fuzz Parquet inputs
-        type: boolean
-        default: true
-      duckdbRepo:
-        description: duckdb repository
-        type: string
-        default: duckdb/duckdb
-      duckdb_ref:
-        description: duckdb branch, tag, or full-length SHA
-        type: string
-        default: main
-      fuzzTime:
-        description: fuzz time (seconds)
-        type: number
-        default: 3600
 
 jobs:
   run-file-reader-fuzzer:
     name: Run AFL++ File Reader Fuzzer
     uses: duckdblabs/duckdb-aflplusplus/.github/workflows/FileReaderFuzzer.yml@main
     with:
-      csv: ${{ inputs.csv }}
-      json: ${{ inputs.json }}
-      parquet: ${{ inputs.parquet }}
-      duckdbRepo: ${{ inputs.duckdbRepo }}
-      duckdb_ref: ${{ inputs.duckdb_ref }}
-      fuzzTime: ${{ fromJSON(inputs.fuzzTime) }}
+      csv: true
+      json: true
+      parquet: true
+      duckdbRepo: duckdb/duckdb
+      duckdb_ref: main
+      fuzzTime: 14400
     secrets:
       FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
