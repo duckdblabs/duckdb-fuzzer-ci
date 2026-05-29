@@ -1,0 +1,15 @@
+name: AFL++ Fuzz DuckDB Storage Format
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 1 * * *"
+
+jobs:
+  run-aflplusplus-storage-fuzzer:
+    name: Run AFL++ Storage fuzzer
+    uses: duckdblabs/duckdb-aflplusplus/.github/workflows/RunStorageFuzzer.yml@main
+    with:
+      ref: main
+      fuzzTime: 14400
+    secrets:
+      FUZZEROFDUCKSKEY: ${{ secrets.FUZZEROFDUCKSKEY }}
