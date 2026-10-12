@@ -56,6 +56,15 @@ jobs:
       - name: create build sqlsmith extension file
         shell: bash
         run: |
+          # duckdb's sqlsmith patches target its pinned sqlsmith commit; the branch under test may already contain them
+          git clone -q --depth 1 -b "${{ inputs.git_tag }}" "https://github.com/${{ inputs.git_url }}" /tmp/sqlsmith-under-test
+          for patch in .github/patches/extensions/sqlsmith/*.patch; do
+            [ -e "$patch" ] || continue
+            if git -C /tmp/sqlsmith-under-test apply --check -R "$PWD/$patch" 2>/dev/null; then
+              echo "skipping $patch: already applied on ${{ inputs.git_tag }}"
+              rm "$patch"
+            fi
+          done
           APPLY_PATCHES=""
           if ls .github/patches/extensions/sqlsmith/*.patch 2>/dev/null; then
             APPLY_PATCHES="APPLY_PATCHES"
