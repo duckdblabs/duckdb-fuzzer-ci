@@ -34,6 +34,8 @@ jobs:
       EXPORT_DYNAMIC_SYMBOLS: 1
       CMAKE_BUILD_PARALLEL_LEVEL: 2
       GEN: ninja
+      # the fuzz job only receives the duckdb binary, so sqlsmith has to be linked in rather than loadable
+      STATICALLY_LINK_EXTENSIONS: core_functions;parquet;json;icu;tpch;tpcds;sqlsmith
 
     steps:
       - name: Dependencies
